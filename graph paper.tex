@@ -22,6 +22,21 @@
 \usetikzlibrary{patterns}
 \usepackage{xcolor}
 
+%%-----------------------------------------------------------------------
+%% Which pattern style do we want?
+%%-----------------------------------------------------------------------
+% Names of patterns. These are basically enum values because I don't
+% know how to really program in TeX.
+\def\stdpat       {std}        % Standard, ten squares per inch (s.p.i.)
+\def\stdeightpat  {stdeight}   % Standard, eight s.p.i.
+\def\majminpat    {majmin}     % Eight s.p.i. w/ major grid ever 1/2 inch
+\def\dotpat       {dot}        % Dot grid
+\def\hexpat       {hex}        % Hex grid
+\def\lightconepat {lightcone}  % Light cone grid
+
+% Which pattern style to use. CHOOSE HERE by using one of the magic
+% tokens above: std, stdeight, majmin, dot, hex, lightcone
+\def\usepat{std}
 
 %%-----------------------------------------------------------------------
 %% Some nice colors.
@@ -125,57 +140,54 @@
     \pgfusepath{fill}
   }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Document starts here
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
 
 % No page numbers!
 \thispagestyle{empty}
 
+\begin{tikzpicture}[remember picture, overlay]
+
+  % Change "very thin" to "thin" if the lines are too thin.
+  \tikzset{
+    minorgrid/.style={minorcolor, thin},
+    majorgrid/.style={majorcolor, thin},
+  }
+
 %%-(Section)-------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
 %% Use this section for quadrille, ten squares per inch.
 %%-----------------------------------------------------------------------
-  \begin{tikzpicture}[remember picture, overlay]
 
-    % Change "very thin" to "thin" if the lines are too thin.
-    \tikzset{
-      minorgrid/.style={minorcolor, thin},
-      majorgrid/.style={majorcolor, thin},
-    }
+\ifx\usepat\stdpat
+% Draw a grid with 10 squares per inch.
+\draw[style=minorgrid, shift={(current page.south west)},shift={(0.2in,0.2in)}] (0,0) coordinate (a) grid
+[step=0.1in] (8.1in,10.6in) coordinate (b);
 
-    % Draw a grid with 10 squares per inch.
-    \draw[style=minorgrid, shift={(current page.south west)},shift={(0.2in,0.2in)}] (0,0) coordinate (a) grid
-    [step=0.1in] (8.1in,10.6in) coordinate (b);
-
-    % Draw a frame around the grid.
-    \draw[style=majorgrid] (a) rectangle (b);
-
-
-  \end{tikzpicture}
-
+% Draw a frame around the grid.
+\draw[style=majorgrid] (a) rectangle (b);
+\fi
 
 %%-(Section)-------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
 %% Use this section for quadrille, eight squares per inch.
 %%-----------------------------------------------------------------------
-  %   \begin{tikzpicture}[remember picture, overlay]
-  %
-  %     % Change "very thin" to "thin" if the lines are too thin.
-  %     \tikzset{
-  %       minorgrid/.style={minorcolor, thin},
-  %       majorgrid/.style={majorcolor, thin},
-  %     }
-  %
-  %     % Draw a grid with 10 squares per inch.
-  %     \draw[style=minorgrid, shift={(current page.south west)},shift={(0.1875in,0.1875in)}] (0,0) coordinate (a)
-  % grid [step=0.125in] (8.125in,10.625in) coordinate (b);
-  %
-  %     % Draw a frame around the grid.
-  %     \draw[style=majorgrid] (a) rectangle (b);
-  %
-  %   \end{tikzpicture}
+
+\ifx\usepat\stdeightpat
+% Draw a grid with 10 squares per inch.
+\draw[style=minorgrid, shift={(current page.south west)},shift={(0.1875in,0.1875in)}] (0,0) coordinate (a)
+grid [step=0.125in] (8.125in,10.625in) coordinate (b);
+
+% Draw a frame around the grid.
+\draw[style=majorgrid] (a) rectangle (b);
+\fi
 
 %%-(Section)-------------------------------------------------------------
 
@@ -183,23 +195,16 @@
 %% Use this part for graph, eight squares per inch with a major grid
 %% every half-inch.
 %%-----------------------------------------------------------------------
-  % \begin{tikzpicture}[remember picture, overlay]
-  %
-  %   % Change "very thin" to "thin" if the lines are too thin.
-  %   \tikzset{
-  %     minorgrid/.style={minorcolor, thin},
-  %     majorgrid/.style={majorcolor, thin},
-  %   }
-  %
-  %   % Draw a grid with 10 squares per inch.
-  %   \draw[style=minorgrid, shift={(current page.south west)},shift={(0.225in,0.25in)}] (0,0) coordinate (a) grid [step=0.125in] (8in,10.5in) coordinate (b);
-  %
-  %   \draw[style=majorgrid, shift={(current page.south west)},shift={(0.225in,0.25in)}] (0,0) coordinate (a) grid [step=0.5in] (8in,10.5in) coordinate (b);
-  %
-  %   % Draw a frame around the grid.
-  %   \draw[style=majorgrid] (a) rectangle (b);
-  %
-  % \end{tikzpicture}
+
+\ifx\usepat\majminpat
+% Draw a grid with 10 squares per inch.
+\draw[style=minorgrid, shift={(current page.south west)},shift={(0.225in,0.25in)}] (0,0) coordinate (a) grid [step=0.125in] (8in,10.5in) coordinate (b);
+
+\draw[style=majorgrid, shift={(current page.south west)},shift={(0.225in,0.25in)}] (0,0) coordinate (a) grid [step=0.5in] (8in,10.5in) coordinate (b);
+
+% Draw a frame around the grid.
+\draw[style=majorgrid] (a) rectangle (b);
+\fi
 
 %%-(Section)-------------------------------------------------------------
 
@@ -208,61 +213,61 @@
 %% Slightly modified version of code added by Leo
 %% Stein (@duetosymmetry).
 %%-----------------------------------------------------------------------
-  % \begin{tikzpicture}[remember picture,overlay]%
-  % \node at (current page.north west) [anchor=north west, inner sep=0pt, outer sep=0.18in]{
-  % \tikz{
-  % \fill [pattern=dotgrid,pattern color=minorcolor] (0.02,0) rectangle (8.14in,10.64in);
-  %         }
-  %     };
-  % \end{tikzpicture}
 
+\ifx\usepat\dotpat
+\node at (current page.north west) [anchor=north west, inner sep=0pt, outer sep=0.18in]{
+  \tikz{
+    \fill [pattern=dotgrid,pattern color=minorcolor] (0.02,0) rectangle (8.14in,10.64in);
+  }
+};
+\fi
 
 %%-(Section)-------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
 %% Use this section to draw a hex grid on the page.
 %%-----------------------------------------------------------------------
-  % \begin{tikzpicture}[remember picture,overlay]%
-  %   \node at (current page.north west) [anchor=north west, inner sep=0pt, outer sep=0.0in]{
-  %     \tikz{
-  %     \fill [pattern=hexagons,pattern color=minorcolor] (0,0) rectangle (8.5in,11in);
-  %       }
-  %   };
-  % \end{tikzpicture}
+
+\ifx\usepat\hexpat
+\node at (current page.north west) [anchor=north west, inner sep=0pt, outer sep=0.0in]{
+  \tikz{
+    \fill [pattern=hexagons,pattern color=minorcolor] (0,0) rectangle (8.5in,11in);
+  }
+};
+\fi
 
 %%-(Section)-------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
 %% Use this section to draw a grid with light cones.
 %%-----------------------------------------------------------------------
-  %
-  %   % The color to use for the null directions.
-  %   \colorlet{lightlines}{scarlet!30}
-  %
-  %   % Colors and line style for the squares and the border.
-  %   \tikzset{
-  %     minorgrid/.style={cornflower!30, thin},
-  %     majorgrid/.style={cornflower!50, thick},
-  %   }
-  %
-  %   \begin{tikzpicture}[remember picture, overlay]
-  %     % Draw a grid with 4 squares per inch.
-  %     \draw[style=minorgrid, shift={(current page.south west)}] (0.25in,0.25in) coordinate (a) grid
-  % [step=0.25in] (8.25in,10.75in) coordinate (b);
-  %
-  %     % Draw a border around the grid.
-  %     \draw[style=majorgrid] (a) rectangle (b);
-  %
-  %     % Now fill the grid with 45 degree lines in the color defined for null directions.
-  %     \node at (current page.south west) [anchor=south west, inner sep=0, style=majorgrid, shift={(a)}]{
-  %     \tikz{
-  %           \fill [pattern=lightcones,pattern color=lightlines] (0.25in,0.25in) rectangle (8.25in,10.75in);
-  %       }
-  %     };
-  %
-  %   \end{tikzpicture}
+
+\ifx\usepat\lightconepat
+% The color to use for the null directions.
+\colorlet{lightlines}{scarlet!30}
+
+% Colors and line style for the squares and the border.
+\tikzset{
+  minorgrid/.style={cornflower!30, thin},
+  majorgrid/.style={cornflower!50, thick},
+}
+
+% Draw a grid with 4 squares per inch.
+\draw[style=minorgrid, shift={(current page.south west)}] (0.25in,0.25in) coordinate (a) grid
+[step=0.25in] (8.25in,10.75in) coordinate (b);
+
+% Draw a border around the grid.
+\draw[style=majorgrid] (a) rectangle (b);
+
+% Now fill the grid with 45 degree lines in the color defined for null directions.
+\node at (current page.south west) [anchor=south west, inner sep=0, style=majorgrid, shift={(a)}]{
+  \tikz{
+    \fill [pattern=lightcones,pattern color=lightlines] (0.25in,0.25in) rectangle (8.25in,10.75in);
+  }
+};
+\fi
 
 %%-(End)-------------------------------------------------------------
-
+\end{tikzpicture}
 
 \end{document}
