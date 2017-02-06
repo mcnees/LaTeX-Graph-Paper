@@ -50,7 +50,7 @@
 
 
 %%-----------------------------------------------------------------------
-%% Colors used for the minor and major grids.
+%% 2. Colors used for the minor, major, and null (diagonal) grids.
 %%-----------------------------------------------------------------------
 %% A light blue color for the minor grid.
 \colorlet{minorcolor}{cornflower!35}
@@ -58,7 +58,8 @@
 \colorlet{majorcolor}{cornflower!60}
 %% You can make either one darker by changing the number after the "!".
 %% For instance, cornflower!75 would be much darker.
-
+% The color to use for the null directions.
+\colorlet{lightlines}{scarlet!30}
 
 %%-----------------------------------------------------------------------
 %% Comment out the previous lines and uncomment the following lines for
@@ -66,6 +67,7 @@
 %%-----------------------------------------------------------------------
 % \colorlet{minorcolor}{chameleon!30}
 % \colorlet{majorcolor}{chameleon!50}
+
 
 %%-----------------------------------------------------------------------
 %% This section sets up a routine for filling a shape with
@@ -103,7 +105,7 @@
 %% This section sets up a routine for filling the squares in a
 %% grid with null lines.
 %%-----------------------------------------------------------------------
-\def\squaresize{0.2in}
+\def\squaresize{0.25in}
 \pgfdeclarepatternformonly
   {lightcones}% name
   {\pgfpointorigin}% lower left
@@ -243,15 +245,6 @@ grid [step=0.125in] (8.125in,10.625in) coordinate (b);
 %%-----------------------------------------------------------------------
 
 \ifx\usepat\lightconepat
-% The color to use for the null directions.
-\colorlet{lightlines}{scarlet!30}
-
-% Colors and line style for the squares and the border.
-\tikzset{
-  minorgrid/.style={cornflower!30, thin},
-  majorgrid/.style={cornflower!50, thick},
-}
-
 % Draw a grid with 4 squares per inch.
 \draw[style=minorgrid, shift={(current page.south west)}] (0.25in,0.25in) coordinate (a) grid
 [step=0.25in] (8.25in,10.75in) coordinate (b);
