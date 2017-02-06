@@ -2,7 +2,7 @@
 %% Make your own quadrille, graph, hex, etc paper!
 %% Uses the pgf/TikZ package for LaTeX, which should be part of
 %% any modern TeX installation.
-%% Email: mcnees@gmail.com 
+%% Email: mcnees@gmail.com
 %% Twitter: @mcnees
 %%-----------------------------------------------------------------------
 
@@ -10,16 +10,16 @@
 
 %%-----------------------------------------------------------------------
 %% This package gives small margins so you use less
-%% paper. 
+%% paper.
 %%-----------------------------------------------------------------------
 \usepackage[cm]{fullpage}
 
 %%-----------------------------------------------------------------------
 %% Packages needed for the drawing routines and for mixing custom
-%% colors. 
+%% colors.
 %%-----------------------------------------------------------------------
-\usepackage{tikz} 
-\usetikzlibrary{patterns} 
+\usepackage{tikz}
+\usetikzlibrary{patterns}
 \usepackage{xcolor}
 
 
@@ -58,56 +58,56 @@
 %% http://tex.stackexchange.com/questions/6019/drawing-hexagons/6128#6128
 %%-----------------------------------------------------------------------
 
-  % Big hexagons
-  %\def\hexagonsize{0.1666in}
-  % Small hexagons
-  \def\hexagonsize{0.0833in}
+% Big hexagons
+%\def\hexagonsize{0.1666in}
+% Small hexagons
+\def\hexagonsize{0.0833in}
 
-  \pgfdeclarepatternformonly
-    {hexagons}% name
-    {\pgfpointorigin}% lower left
-    {\pgfpoint{3*\hexagonsize}{0.866025*2*\hexagonsize}}
-    {\pgfpoint{3*\hexagonsize}{0.866025*2*\hexagonsize}}
-    {
-     \pgfsetlinewidth{0.6pt}
-     \pgftransformshift{\pgfpoint{0mm}{0.866025*\hexagonsize}}
-     \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-     \pgfpathlineto{\pgfpoint{0.5*\hexagonsize}{0mm}}
-     \pgfpathlineto{\pgfpoint{\hexagonsize}{-0.866025*\hexagonsize}}
-     \pgfpathlineto{\pgfpoint{2*\hexagonsize}{-0.866025*\hexagonsize}}
-     \pgfpathlineto{\pgfpoint{2.5*\hexagonsize}{0mm}}
-     \pgfpathlineto{\pgfpoint{3*\hexagonsize+0.2mm}{0mm}}
-     \pgfpathmoveto{\pgfpoint{0.5*\hexagonsize}{0mm}}
-     \pgfpathlineto{\pgfpoint{\hexagonsize}{0.866025*\hexagonsize}}
-     \pgfpathlineto{\pgfpoint{2*\hexagonsize}{0.866025*\hexagonsize}}
-     \pgfpathlineto{\pgfpoint{2.5*\hexagonsize}{0mm}}
-     \pgfusepath{stroke}
-    }
+\pgfdeclarepatternformonly
+  {hexagons}% name
+  {\pgfpointorigin}% lower left
+  {\pgfpoint{3*\hexagonsize}{0.866025*2*\hexagonsize}}
+  {\pgfpoint{3*\hexagonsize}{0.866025*2*\hexagonsize}}
+  {
+    \pgfsetlinewidth{0.6pt}
+    \pgftransformshift{\pgfpoint{0mm}{0.866025*\hexagonsize}}
+    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+    \pgfpathlineto{\pgfpoint{0.5*\hexagonsize}{0mm}}
+    \pgfpathlineto{\pgfpoint{\hexagonsize}{-0.866025*\hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2*\hexagonsize}{-0.866025*\hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2.5*\hexagonsize}{0mm}}
+    \pgfpathlineto{\pgfpoint{3*\hexagonsize+0.2mm}{0mm}}
+    \pgfpathmoveto{\pgfpoint{0.5*\hexagonsize}{0mm}}
+    \pgfpathlineto{\pgfpoint{\hexagonsize}{0.866025*\hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2*\hexagonsize}{0.866025*\hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2.5*\hexagonsize}{0mm}}
+    \pgfusepath{stroke}
+  }
 
 %%-----------------------------------------------------------------------
 %% This section sets up a routine for filling the squares in a
 %% grid with null lines.
 %%-----------------------------------------------------------------------
-  \def\squaresize{0.2in}
-  \pgfdeclarepatternformonly
-    {lightcones}% name
-    {\pgfpointorigin}% lower left
-    {\pgfpoint{\squaresize}{\squaresize}}%  upper right
-    {\pgfpoint{\squaresize}{\squaresize}}%  tile size
-    {% shape description
-     \pgfsetlinewidth{0.4pt}
-	 %Comment out this line for solid lines on light cones, instead of dashes.
-	 \pgfsetdash{{0.05cm}{0.05cm}}{0.025cm}
-     \pgfpathmoveto{\pgfpoint{0in}{0in}}
-     \pgfpathlineto{\pgfpoint{\squaresize}{\squaresize}}
-     \pgfpathmoveto{\pgfpoint{0in}{\squaresize}}
-     \pgfpathlineto{\pgfpoint{\squaresize}{0in}}
-     \pgfusepath{stroke}
-    }
+\def\squaresize{0.2in}
+\pgfdeclarepatternformonly
+  {lightcones}% name
+  {\pgfpointorigin}% lower left
+  {\pgfpoint{\squaresize}{\squaresize}}%  upper right
+  {\pgfpoint{\squaresize}{\squaresize}}%  tile size
+  {% shape description
+    \pgfsetlinewidth{0.4pt}
+    %Comment out this line for solid lines on light cones, instead of dashes.
+    \pgfsetdash{{0.05cm}{0.05cm}}{0.025cm}
+    \pgfpathmoveto{\pgfpoint{0in}{0in}}
+    \pgfpathlineto{\pgfpoint{\squaresize}{\squaresize}}
+    \pgfpathmoveto{\pgfpoint{0in}{\squaresize}}
+    \pgfpathlineto{\pgfpoint{\squaresize}{0in}}
+    \pgfusepath{stroke}
+  }
 
 %%-----------------------------------------------------------------------
 %% This section sets up a routine for filling a region with dots
-%% Slightly modified version of code added by Leo 
+%% Slightly modified version of code added by Leo
 %% Stein (@duetosymmetry on Twitter).
 %%-----------------------------------------------------------------------
 % Big squares
@@ -116,20 +116,20 @@
 \def\dotgridsquaresize{0.1in}
 \def\dotsize{.7pt}
 \pgfdeclarepatternformonly
-    {dotgrid}% name
-    {\pgfpoint{-0.5*\dotgridsquaresize}{-0.5*\dotgridsquaresize}}% lower left
-    {\pgfpoint{0.5*\dotgridsquaresize}{0.5*\dotgridsquaresize}}%  upper right
-    {\pgfpoint{\dotgridsquaresize}{\dotgridsquaresize}}%  tile size
-    {% shape description
-	\pgfpathcircle{\pgfqpoint{0pt}{0pt}}{\dotsize}
-	\pgfusepath{fill}
-    }
+  {dotgrid}% name
+  {\pgfpoint{-0.5*\dotgridsquaresize}{-0.5*\dotgridsquaresize}}% lower left
+  {\pgfpoint{0.5*\dotgridsquaresize}{0.5*\dotgridsquaresize}}%  upper right
+  {\pgfpoint{\dotgridsquaresize}{\dotgridsquaresize}}%  tile size
+  {% shape description
+    \pgfpathcircle{\pgfqpoint{0pt}{0pt}}{\dotsize}
+    \pgfusepath{fill}
+  }
 
 
 \begin{document}
 
 % No page numbers!
-\thispagestyle{empty} 
+\thispagestyle{empty}
 
 %%-(Section)-------------------------------------------------------------
 
@@ -205,16 +205,16 @@
 
 %%-----------------------------------------------------------------------
 %% Use this section to draw a dot grid on the page.
-%% Slightly modified version of code added by Leo 
+%% Slightly modified version of code added by Leo
 %% Stein (@duetosymmetry).
 %%-----------------------------------------------------------------------
-% \begin{tikzpicture}[remember picture,overlay]%
-% \node at (current page.north west) [anchor=north west, inner sep=0pt, outer sep=0.18in]{
-% \tikz{
-% \fill [pattern=dotgrid,pattern color=minorcolor] (0.02,0) rectangle (8.14in,10.64in);
-%         }
-%     };
-% \end{tikzpicture}
+  % \begin{tikzpicture}[remember picture,overlay]%
+  % \node at (current page.north west) [anchor=north west, inner sep=0pt, outer sep=0.18in]{
+  % \tikz{
+  % \fill [pattern=dotgrid,pattern color=minorcolor] (0.02,0) rectangle (8.14in,10.64in);
+  %         }
+  %     };
+  % \end{tikzpicture}
 
 
 %%-(Section)-------------------------------------------------------------
@@ -225,42 +225,42 @@
   % \begin{tikzpicture}[remember picture,overlay]%
   %   \node at (current page.north west) [anchor=north west, inner sep=0pt, outer sep=0.0in]{
   %     \tikz{
-  % 		\fill [pattern=hexagons,pattern color=minorcolor] (0,0) rectangle (8.5in,11in);
-  % 			}
+  %     \fill [pattern=hexagons,pattern color=minorcolor] (0,0) rectangle (8.5in,11in);
+  %       }
   %   };
   % \end{tikzpicture}
 
 %%-(Section)-------------------------------------------------------------
 
-% %%-----------------------------------------------------------------------
-% %% Use this section to draw a grid with light cones.
-% %%-----------------------------------------------------------------------
-%
-	%   % The color to use for the null directions.
-	%   \colorlet{lightlines}{scarlet!30}
-	%
-	%   % Colors and line style for the squares and the border.
-	%   \tikzset{
-	%     minorgrid/.style={cornflower!30, thin},
-	%     majorgrid/.style={cornflower!50, thick},
-	%   }
-	%
-	%   \begin{tikzpicture}[remember picture, overlay]
-	%     % Draw a grid with 4 squares per inch.
-	%     \draw[style=minorgrid, shift={(current page.south west)}] (0.25in,0.25in) coordinate (a) grid
-	% [step=0.25in] (8.25in,10.75in) coordinate (b);
-	%
-	%     % Draw a border around the grid.
-	%     \draw[style=majorgrid] (a) rectangle (b);
-	%
-	%     % Now fill the grid with 45 degree lines in the color defined for null directions.
-	%     \node at (current page.south west) [anchor=south west, inner sep=0, style=majorgrid, shift={(a)}]{
-	%     \tikz{
-	%      		\fill [pattern=lightcones,pattern color=lightlines] (0.25in,0.25in) rectangle (8.25in,10.75in);
-	%   		}
-	%     };
-	%
-	%   \end{tikzpicture}
+%%-----------------------------------------------------------------------
+%% Use this section to draw a grid with light cones.
+%%-----------------------------------------------------------------------
+  %
+  %   % The color to use for the null directions.
+  %   \colorlet{lightlines}{scarlet!30}
+  %
+  %   % Colors and line style for the squares and the border.
+  %   \tikzset{
+  %     minorgrid/.style={cornflower!30, thin},
+  %     majorgrid/.style={cornflower!50, thick},
+  %   }
+  %
+  %   \begin{tikzpicture}[remember picture, overlay]
+  %     % Draw a grid with 4 squares per inch.
+  %     \draw[style=minorgrid, shift={(current page.south west)}] (0.25in,0.25in) coordinate (a) grid
+  % [step=0.25in] (8.25in,10.75in) coordinate (b);
+  %
+  %     % Draw a border around the grid.
+  %     \draw[style=majorgrid] (a) rectangle (b);
+  %
+  %     % Now fill the grid with 45 degree lines in the color defined for null directions.
+  %     \node at (current page.south west) [anchor=south west, inner sep=0, style=majorgrid, shift={(a)}]{
+  %     \tikz{
+  %           \fill [pattern=lightcones,pattern color=lightlines] (0.25in,0.25in) rectangle (8.25in,10.75in);
+  %       }
+  %     };
+  %
+  %   \end{tikzpicture}
 
 %%-(End)-------------------------------------------------------------
 
