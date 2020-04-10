@@ -23,6 +23,11 @@
 \usepackage{xcolor}
 
 %%-----------------------------------------------------------------------
+%% A package for setting the background color of the page
+%%-----------------------------------------------------------------------
+\usepackage{pagecolor}
+
+%%-----------------------------------------------------------------------
 %% Which pattern style do we want?
 %%-----------------------------------------------------------------------
 % Names of patterns. These are basically enum values because I don't
@@ -62,12 +67,17 @@
 \colorlet{lightlines}{scarlet!30}
 
 %%-----------------------------------------------------------------------
+%% Color used for the page background
+%%-----------------------------------------------------------------------
+\colorlet{bgcolor}{plum!10}
+
+%%-----------------------------------------------------------------------
 %% Comment out the previous lines and uncomment the following lines for
 %% graph paper with a light green color, like on an engineering pad.
 %%-----------------------------------------------------------------------
 % \colorlet{minorcolor}{chameleon!30}
 % \colorlet{majorcolor}{chameleon!50}
-
+% \colorlet{bgcolor}{chameleon!10}
 
 %%-----------------------------------------------------------------------
 %% This section sets up a routine for filling a shape with
@@ -152,6 +162,9 @@
 
 % No page numbers!
 \thispagestyle{empty}
+
+% Set the background color. Comment out this line for a white background. 
+\pagecolor{bgcolor}
 
 \begin{tikzpicture}[remember picture, overlay]
 
