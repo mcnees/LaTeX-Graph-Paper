@@ -21,6 +21,6 @@ Some available styles:
 
 ![Light cone](/../screenshots/lightcone.jpg "Light cone")
 
-![Precocious Engineer](/../screenshots/rosie.jpg "Precocious Engineer color scheme")
+![Precocious Engineer](/../screenshots/rosie.png "Precocious Engineer color scheme")
 
-![Hex Engineer](/../screenshots/hex engineer.jpg "Hex grid with Engineering Pad color scheme")
+![Hex Engineer](/../screenshots/hex engineer.png "Hex grid with Engineering Pad color scheme")
