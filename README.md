@@ -23,4 +23,4 @@ Some available styles:
 
 ![Precocious Engineer](/../screenshots/rosie.png "Precocious Engineer color scheme")
 
-![Hex Engineer](/../screenshots/hex engineer.png "Hex grid with Engineering Pad color scheme")
+![Hex Engineer](/../screenshots/hexengineer.png "Hex grid with Engineering Pad color scheme")
