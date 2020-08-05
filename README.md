@@ -20,3 +20,7 @@ Some available styles:
 ![Dots](/../screenshots/dot.jpg "Dots")
 
 ![Light cone](/../screenshots/lightcone.jpg "Light cone")
+
+![Precocious Engineer](/../screenshots/rosie.jpg "Precocious Engineer color scheme")
+
+![Hex Engineer](/../screenshots/hex engineer.jpg "Hex grid with Engineering Pad color scheme")
