@@ -2,6 +2,13 @@
 %% Make your own quadrille, graph, hex, etc paper!
 %% Uses the pgf/TikZ package for LaTeX, which should be part of
 %% any modern TeX installation.
+%%
+%% All the values here are hardcoded for letter size paper. If you
+%% convert this to work with another paper size, please add your
+%% code on github!
+%%
+%% Github: https://github.com/mcnees/LaTeX-Graph-Paper
+%% 
 %% Email: mcnees@gmail.com
 %% Twitter: @mcnees
 %%-----------------------------------------------------------------------
@@ -30,8 +37,8 @@
 %%-----------------------------------------------------------------------
 %% Which pattern style do we want?
 %%-----------------------------------------------------------------------
-% Names of patterns. These are basically enum values because I don't
-% know how to really program in TeX.
+%% Names of patterns. These are basically enum values because I don't
+%% know how to really program in TeX.
 \def\stdpat       {std}        % Standard, ten squares per inch (s.p.i.)
 \def\stdeightpat  {stdeight}   % Standard, eight s.p.i.
 \def\majminpat    {majmin}     % Eight s.p.i. w/ major grid ever 1/2 inch
@@ -39,9 +46,9 @@
 \def\hexpat       {hex}        % Hex grid
 \def\lightconepat {lightcone}  % Light cone grid
 
-% Which pattern style to use. CHOOSE HERE by using one of the magic
-% tokens above: std, stdeight, majmin, dot, hex, lightcone
-\def\usepat{std}
+%% Which pattern style to use. CHOOSE HERE by using one of the magic
+%% tokens above: std, stdeight, majmin, dot, hex, lightcone
+\def\usepat{majmin}
 
 %%-----------------------------------------------------------------------
 %% Some nice colors.
@@ -52,32 +59,51 @@
 \definecolor{scarlet}{rgb}{0.8, 0, 0}
 \definecolor{brick}{rgb}{0.64314, 0, 0}
 \definecolor{sunrise}{rgb}{0.80784, 0.36078, 0}
+\definecolor{rosiebg}{RGB}{250,247,232}
+\definecolor{rosiegrid}{RGB}{186,137,113}
 
 
 %%-----------------------------------------------------------------------
-%% 2. Colors used for the minor, major, and null (diagonal) grids.
+%% Pre-defined Color schemes
 %%-----------------------------------------------------------------------
-%% A light blue color for the minor grid.
+%% Here are some pre-defined color schemes for the paper background
+%% and the major and minor gridlines. Simply uncomment the "\colorlet"
+%% lines below. 
+%%
+%% A number of rgb colors are defined above. You can make either one 
+%% darker by changing the number after the "!". For instance, 
+%% cornflower!75 is darker than cornflower!25.
+
+%% Blue lines on white background
 \colorlet{minorcolor}{cornflower!35}
-%% A darker blue color for the major grid and/or frame.
 \colorlet{majorcolor}{cornflower!60}
-%% You can make either one darker by changing the number after the "!".
-%% For instance, cornflower!75 would be much darker.
-% The color to use for the null directions.
+\colorlet{bgcolor}{white}
+
+%% Precocious Engineer
+% \colorlet{minorcolor}{rosiegrid!50}
+% \colorlet{majorcolor}{rosiegrid}
+% \colorlet{bgcolor}{rosiebg}
+
+%% Red paper
+% \colorlet{minorcolor}{brick!35}
+% \colorlet{majorcolor}{brick!60}
+% \colorlet{bgcolor}{scarlet!8}
+
+%% Engineer Pad
+% \colorlet{minorcolor}{chameleon!50}
+% \colorlet{majorcolor}{chameleon!80}
+% \colorlet{bgcolor}{chameleon!10}
+
+%% Plum pad
+% \colorlet{minorcolor}{cornflower!40}
+% \colorlet{majorcolor}{cornflower!70}
+% \colorlet{bgcolor}{plum!10}
+
+%%-----------------------------------------------------------------------
+%% The color to use for the null directions.
+%%-----------------------------------------------------------------------
 \colorlet{lightlines}{scarlet!30}
 
-%%-----------------------------------------------------------------------
-%% Color used for the page background
-%%-----------------------------------------------------------------------
-\colorlet{bgcolor}{plum!10}
-
-%%-----------------------------------------------------------------------
-%% Comment out the previous lines and uncomment the following lines for
-%% graph paper with a light green color, like on an engineering pad.
-%%-----------------------------------------------------------------------
-% \colorlet{minorcolor}{chameleon!30}
-% \colorlet{majorcolor}{chameleon!50}
-% \colorlet{bgcolor}{chameleon!10}
 
 %%-----------------------------------------------------------------------
 %% This section sets up a routine for filling a shape with
@@ -85,9 +111,10 @@
 %% http://tex.stackexchange.com/questions/6019/drawing-hexagons/6128#6128
 %%-----------------------------------------------------------------------
 
-% Big hexagons
+%% Uncomment one of the two "\def" lines below for Big or Small hexagons.
+%% Big hexagons
 %\def\hexagonsize{0.1666in}
-% Small hexagons
+%% Small hexagons
 \def\hexagonsize{0.0833in}
 
 \pgfdeclarepatternformonly
@@ -137,9 +164,10 @@
 %% Slightly modified version of code added by Leo
 %% Stein (@duetosymmetry on Twitter).
 %%-----------------------------------------------------------------------
-% Big squares
+%% Uncomment one of the two "\def" lines below for Big or Small squares.
+%% Big squares
 % \def\dotgridsquaresize{0.2in}
-% Small squares
+%% Small squares
 \def\dotgridsquaresize{0.1in}
 \def\dotsize{.7pt}
 \pgfdeclarepatternformonly
@@ -160,15 +188,15 @@
 
 \begin{document}
 
-% No page numbers!
+%% No page numbers!
 \thispagestyle{empty}
 
-% Set the background color. Comment out this line for a white background. 
+%% Set the background color. Comment out this line for a white background. 
 \pagecolor{bgcolor}
 
 \begin{tikzpicture}[remember picture, overlay]
 
-  % Change "very thin" to "thin" if the lines are too thin.
+  %% Change "thin" to "very thin" if the lines are too thick.
   \tikzset{
     minorgrid/.style={minorcolor, thin},
     majorgrid/.style={majorcolor, thin},
@@ -181,11 +209,11 @@
 %%-----------------------------------------------------------------------
 
 \ifx\usepat\stdpat
-% Draw a grid with 10 squares per inch.
+%% Draw a grid with 10 squares per inch.
 \draw[style=minorgrid, shift={(current page.south west)},shift={(0.2in,0.2in)}] (0,0) coordinate (a) grid
 [step=0.1in] (8.1in,10.6in) coordinate (b);
 
-% Draw a frame around the grid.
+%% Draw a frame around the grid.
 \draw[style=majorgrid] (a) rectangle (b);
 \fi
 
@@ -196,11 +224,11 @@
 %%-----------------------------------------------------------------------
 
 \ifx\usepat\stdeightpat
-% Draw a grid with 10 squares per inch.
+%% Draw a grid with 10 squares per inch.
 \draw[style=minorgrid, shift={(current page.south west)},shift={(0.1875in,0.1875in)}] (0,0) coordinate (a)
 grid [step=0.125in] (8.125in,10.625in) coordinate (b);
 
-% Draw a frame around the grid.
+%% Draw a frame around the grid.
 \draw[style=majorgrid] (a) rectangle (b);
 \fi
 
@@ -212,12 +240,12 @@ grid [step=0.125in] (8.125in,10.625in) coordinate (b);
 %%-----------------------------------------------------------------------
 
 \ifx\usepat\majminpat
-% Draw a grid with 10 squares per inch.
+%% Draw a grid with 10 squares per inch.
 \draw[style=minorgrid, shift={(current page.south west)},shift={(0.225in,0.25in)}] (0,0) coordinate (a) grid [step=0.125in] (8in,10.5in) coordinate (b);
 
 \draw[style=majorgrid, shift={(current page.south west)},shift={(0.225in,0.25in)}] (0,0) coordinate (a) grid [step=0.5in] (8in,10.5in) coordinate (b);
 
-% Draw a frame around the grid.
+%% Draw a frame around the grid.
 \draw[style=majorgrid] (a) rectangle (b);
 \fi
 
@@ -258,14 +286,14 @@ grid [step=0.125in] (8.125in,10.625in) coordinate (b);
 %%-----------------------------------------------------------------------
 
 \ifx\usepat\lightconepat
-% Draw a grid with 4 squares per inch.
+%% Draw a grid with 4 squares per inch.
 \draw[style=minorgrid, shift={(current page.south west)}] (0.25in,0.25in) coordinate (a) grid
 [step=0.25in] (8.25in,10.75in) coordinate (b);
 
-% Draw a border around the grid.
+%% Draw a border around the grid.
 \draw[style=majorgrid] (a) rectangle (b);
 
-% Now fill the grid with 45 degree lines in the color defined for null directions.
+%% Now fill the grid with 45 degree lines in the color defined for null directions.
 \node at (current page.south west) [anchor=south west, inner sep=0, style=majorgrid, shift={(a)}]{
   \tikz{
     \fill [pattern=lightcones,pattern color=lightlines] (0.25in,0.25in) rectangle (8.25in,10.75in);
