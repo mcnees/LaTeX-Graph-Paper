@@ -11,8 +11,9 @@
 %% 
 %% Email: mcnees@gmail.com
 %% Twitter: @mcnees
+%%
+%% Last Update: 12/14/20 - Added ruled and double-ruled pages
 %%-----------------------------------------------------------------------
-
 \documentclass[11pt]{article}
 
 %%-----------------------------------------------------------------------
@@ -39,16 +40,18 @@
 %%-----------------------------------------------------------------------
 %% Names of patterns. These are basically enum values because I don't
 %% know how to really program in TeX.
-\def\stdpat       {std}        % Standard, ten squares per inch (s.p.i.)
-\def\stdeightpat  {stdeight}   % Standard, eight s.p.i.
-\def\majminpat    {majmin}     % Eight s.p.i. w/ major grid ever 1/2 inch
-\def\dotpat       {dot}        % Dot grid
-\def\hexpat       {hex}        % Hex grid
-\def\lightconepat {lightcone}  % Light cone grid
+\def\stdpat       		{std}        % Standard, ten squares per inch (s.p.i.)
+\def\stdeightpat 		{stdeight}   % Standard, eight s.p.i.
+\def\majminpat    		{majmin}     % Eight s.p.i. w/ major grid ever 1/2 inch
+\def\dotpat       		{dot}        % Dot grid
+\def\hexpat      		{hex}        % Hex grid
+\def\lightconepat 		{lightcone}  % Light cone grid
+\def\ruledpat     		{ruled} 	   % Ruled paper
+\def\doubleruledpat     {doubleruled} 	   % Ruled paper
 
 %% Which pattern style to use. CHOOSE HERE by using one of the magic
 %% tokens above: std, stdeight, majmin, dot, hex, lightcone
-\def\usepat{majmin}
+\def\usepat{std}
 
 %%-----------------------------------------------------------------------
 %% Some nice colors.
@@ -74,7 +77,7 @@
 %% darker by changing the number after the "!". For instance, 
 %% cornflower!75 is darker than cornflower!25.
 
-%% Blue lines on white background
+% Blue lines on white background
 \colorlet{minorcolor}{cornflower!35}
 \colorlet{majorcolor}{cornflower!60}
 \colorlet{bgcolor}{white}
@@ -89,7 +92,7 @@
 % \colorlet{majorcolor}{brick!60}
 % \colorlet{bgcolor}{scarlet!8}
 
-%% Engineer Pad
+% % Engineer Pad
 % \colorlet{minorcolor}{chameleon!50}
 % \colorlet{majorcolor}{chameleon!80}
 % \colorlet{bgcolor}{chameleon!10}
@@ -100,7 +103,7 @@
 % \colorlet{bgcolor}{plum!10}
 
 %%-----------------------------------------------------------------------
-%% The color to use for the null directions.
+%% The color to use for the null directions when drawing lightcones.
 %%-----------------------------------------------------------------------
 \colorlet{lightlines}{scarlet!30}
 
@@ -188,7 +191,7 @@
 
 \begin{document}
 
-%% No page numbers!
+%% No page numbers. 
 \thispagestyle{empty}
 
 %% Set the background color. Comment out this line for a white background. 
@@ -205,7 +208,7 @@
 %%-(Section)-------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
-%% Use this section for quadrille, ten squares per inch.
+%% Quadrille, ten squares per inch.
 %%-----------------------------------------------------------------------
 
 \ifx\usepat\stdpat
@@ -220,7 +223,7 @@
 %%-(Section)-------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
-%% Use this section for quadrille, eight squares per inch.
+%% Quadrille, eight squares per inch.
 %%-----------------------------------------------------------------------
 
 \ifx\usepat\stdeightpat
@@ -235,7 +238,7 @@ grid [step=0.125in] (8.125in,10.625in) coordinate (b);
 %%-(Section)-------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
-%% Use this part for graph, eight squares per inch with a major grid
+%% Graph paper, eight squares per inch with a major grid
 %% every half-inch.
 %%-----------------------------------------------------------------------
 
@@ -249,10 +252,45 @@ grid [step=0.125in] (8.125in,10.625in) coordinate (b);
 \draw[style=majorgrid] (a) rectangle (b);
 \fi
 
+
 %%-(Section)-------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
-%% Use this section to draw a dot grid on the page.
+%% Ruled page with bold lines every 0.2in or 0.25in
+%%-----------------------------------------------------------------------
+
+\ifx\usepat\ruledpat
+%% Draw a ruled page with lines every 0.2in
+\draw[style=majorgrid, shift={(current page.south west)},shift={(0.225in,0.1in)}] (0,0.2in) coordinate (a) grid [ystep=0.2in, xstep=8in] (8in,10.6in) coordinate (b);
+
+%% Draw a ruled page with lines every 0.25in
+%\draw[style=majorgrid, shift={(current page.south west)},shift={(0.225in,0.25in)}] (0,0) coordinate (a) grid [ystep=0.25in, xstep=8in] (8in,10.5in) coordinate (b);
+
+%% Draw a frame around the grid.
+\draw[style=majorgrid] (a) rectangle (b);
+\fi
+
+%%-(Section)-------------------------------------------------------------
+
+%%-----------------------------------------------------------------------
+%% Ruled page with bold lines every 0.25in and light lines 
+%% every 0.125 in.
+%%-----------------------------------------------------------------------
+
+\ifx\usepat\doubleruledpat
+%% Draw a ruled pattern with thin lines every 0.125 in and bold lines every 0.25 in.
+\draw[style=minorgrid, shift={(current page.south west)},shift={(0.225in,0.25in)}] (0,0) coordinate (a) grid [ystep=0.125in, xstep=8in] (8in,10.5in) coordinate (b);
+
+\draw[style=majorgrid, shift={(current page.south west)},shift={(0.225in,0.25in)}] (0,0) coordinate (a) grid [ystep=0.25in, xstep=8in] (8in,10.5in) coordinate (b);
+
+%% Draw a frame around the grid.
+\draw[style=majorgrid] (a) rectangle (b);
+\fi
+
+%%-(Section)-------------------------------------------------------------
+
+%%-----------------------------------------------------------------------
+%% Dot grid
 %% Slightly modified version of code added by Leo
 %% Stein (@duetosymmetry).
 %%-----------------------------------------------------------------------
@@ -268,7 +306,7 @@ grid [step=0.125in] (8.125in,10.625in) coordinate (b);
 %%-(Section)-------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
-%% Use this section to draw a hex grid on the page.
+%% Hex grid, adjust hexagon size in the preamble
 %%-----------------------------------------------------------------------
 
 \ifx\usepat\hexpat
@@ -282,7 +320,7 @@ grid [step=0.125in] (8.125in,10.625in) coordinate (b);
 %%-(Section)-------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
-%% Use this section to draw a grid with light cones.
+%% A grid with light cones.
 %%-----------------------------------------------------------------------
 
 \ifx\usepat\lightconepat
