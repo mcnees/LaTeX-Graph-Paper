@@ -12,7 +12,7 @@
 %% Email: mcnees@gmail.com
 %% Twitter: @mcnees
 %%
-%% Last Update: 2/12/21 - Added isometric grid
+%% Last Update: 12/14/20 - Added ruled and double-ruled pages
 %%-----------------------------------------------------------------------
 \documentclass[11pt]{article}
 
@@ -46,13 +46,14 @@
 \def\dotpat       		{dot}        % Dot grid
 \def\hexpat      		{hex}        % Hex grid
 \def\tripat          	{tri}        % Triangle grid
+\def\isopat          	{iso}        % Isometric grid
 \def\lightconepat 		{lightcone}  % Light cone grid
 \def\ruledpat     		{ruled} 	   % Ruled paper
 \def\doubleruledpat     {doubleruled} 	   % Ruled paper
 
 %% Which pattern style to use. CHOOSE HERE by using one of the magic
 %% tokens above: std, stdeight, majmin, dot, hex, lightcone
-\def\usepat{tri}
+\def\usepat{iso}
 
 %%-----------------------------------------------------------------------
 %% Some nice colors.
@@ -83,20 +84,20 @@
 % \colorlet{majorcolor}{cornflower!50}
 % \colorlet{bgcolor}{white}
 
-% Precocious Engineer
-\colorlet{minorcolor}{rosiegrid!50}
-\colorlet{majorcolor}{rosiegrid}
-\colorlet{bgcolor}{rosiebg}
+% % Precocious Engineer
+% \colorlet{minorcolor}{rosiegrid!50}
+% \colorlet{majorcolor}{rosiegrid}
+% \colorlet{bgcolor}{rosiebg}
 
 %% Red paper
 % \colorlet{minorcolor}{brick!35}
 % \colorlet{majorcolor}{brick!60}
 % \colorlet{bgcolor}{scarlet!8}
 
-% % Engineer Pad
-% \colorlet{minorcolor}{chameleon!50}
-% \colorlet{majorcolor}{chameleon!80}
-% \colorlet{bgcolor}{chameleon!10}
+% Engineer Pad
+\colorlet{minorcolor}{chameleon!50}
+\colorlet{majorcolor}{chameleon!80}
+\colorlet{bgcolor}{chameleon!10}
 
 %% Plum pad
 % \colorlet{minorcolor}{cornflower!40}
@@ -176,6 +177,28 @@
     \pgfusepath{stroke}
   }
   
+\pgfdeclarepatternformonly
+  % Name of the pattern
+  {isometric}
+  % Set the lower left corner of the pattern
+  {\pgfpointorigin}
+  % Set the upper right corner of the pattern
+  {\pgfpoint{2*0.8660254*\trianglesize}{\trianglesize}}
+  % Declare the size of the pattern blocks
+  {\pgfpoint{2*0.8660254*\trianglesize}{\trianglesize}}
+  % Draw the pattern
+  {
+    \pgfsetlinewidth{0.6pt}
+	\pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+	\pgfpathlineto{\pgfpoint{2*0.8660254*\trianglesize}{\trianglesize}}
+	\pgfpathlineto{\pgfpoint{2*0.8660254*\trianglesize}{0mm}}
+	\pgfpathlineto{\pgfpoint{0mm}{\trianglesize}}
+	\pgfpathlineto{\pgfpoint{0mm}{0mm}}
+    \pgfpathmoveto{\pgfpoint{0.8660254*\trianglesize}{0mm}}
+    \pgfpathlineto{\pgfpoint{0.8660254*\trianglesize}{\trianglesize}}
+    \pgfusepath{stroke}
+  }
+    
 %%-----------------------------------------------------------------------
 %% This section sets up a routine for filling the squares in a
 %% grid with null lines.
@@ -367,6 +390,19 @@ grid [step=0.125in] (8.125in,10.625in) coordinate (b);
 };
 \fi
 
+%%-(Section)-------------------------------------------------------------
+
+%%-----------------------------------------------------------------------
+%% Isometric grid, adjust triangle size in the preamble
+%%-----------------------------------------------------------------------
+
+\ifx\usepat\isopat
+\node at (current page.north west) [anchor=north west, inner sep=0pt, outer sep=0.0in]{
+  \tikz{
+    \fill [pattern=isometric,pattern color=minorcolor] (0,0) rectangle (8.5in,11in);
+  }
+};
+\fi
 
 %%-(Section)-------------------------------------------------------------
 
