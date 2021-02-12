@@ -12,7 +12,7 @@
 %% Email: mcnees@gmail.com
 %% Twitter: @mcnees
 %%
-%% Last Update: 12/14/20 - Added ruled and double-ruled pages
+%% Last Update: 2/12/21 - Added isometric grid
 %%-----------------------------------------------------------------------
 \documentclass[11pt]{article}
 
@@ -45,13 +45,14 @@
 \def\majminpat    		{majmin}     % Eight s.p.i. w/ major grid ever 1/2 inch
 \def\dotpat       		{dot}        % Dot grid
 \def\hexpat      		{hex}        % Hex grid
+\def\tripat          	{tri}        % Triangle grid
 \def\lightconepat 		{lightcone}  % Light cone grid
 \def\ruledpat     		{ruled} 	   % Ruled paper
 \def\doubleruledpat     {doubleruled} 	   % Ruled paper
 
 %% Which pattern style to use. CHOOSE HERE by using one of the magic
 %% tokens above: std, stdeight, majmin, dot, hex, lightcone
-\def\usepat{std}
+\def\usepat{tri}
 
 %%-----------------------------------------------------------------------
 %% Some nice colors.
@@ -77,15 +78,15 @@
 %% darker by changing the number after the "!". For instance, 
 %% cornflower!75 is darker than cornflower!25.
 
-% Blue lines on white background
-\colorlet{minorcolor}{cornflower!35}
-\colorlet{majorcolor}{cornflower!60}
-\colorlet{bgcolor}{white}
+% % Blue lines on white background
+% \colorlet{minorcolor}{scarlet!25}
+% \colorlet{majorcolor}{cornflower!35}
+% \colorlet{bgcolor}{white}
 
-%% Precocious Engineer
-% \colorlet{minorcolor}{rosiegrid!50}
-% \colorlet{majorcolor}{rosiegrid}
-% \colorlet{bgcolor}{rosiebg}
+% Precocious Engineer
+\colorlet{minorcolor}{rosiegrid!50}
+\colorlet{majorcolor}{rosiegrid}
+\colorlet{bgcolor}{rosiebg}
 
 %% Red paper
 % \colorlet{minorcolor}{brick!35}
@@ -116,9 +117,9 @@
 
 %% Uncomment one of the two "\def" lines below for Big or Small hexagons.
 %% Big hexagons
-%\def\hexagonsize{0.1666in}
+\def\hexagonsize{0.1666in}
 %% Small hexagons
-\def\hexagonsize{0.0833in}
+%\def\hexagonsize{0.0833in}
 
 \pgfdeclarepatternformonly
   {hexagons}% name
@@ -133,7 +134,7 @@
     \pgfpathlineto{\pgfpoint{\hexagonsize}{-0.866025*\hexagonsize}}
     \pgfpathlineto{\pgfpoint{2*\hexagonsize}{-0.866025*\hexagonsize}}
     \pgfpathlineto{\pgfpoint{2.5*\hexagonsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{3*\hexagonsize+0.2mm}{0mm}}
+    \pgfpathlineto{\pgfpoint{3*\hexagonsize}{0mm}}
     \pgfpathmoveto{\pgfpoint{0.5*\hexagonsize}{0mm}}
     \pgfpathlineto{\pgfpoint{\hexagonsize}{0.866025*\hexagonsize}}
     \pgfpathlineto{\pgfpoint{2*\hexagonsize}{0.866025*\hexagonsize}}
@@ -141,6 +142,40 @@
     \pgfusepath{stroke}
   }
 
+%%-----------------------------------------------------------------------
+%% This section sets up a routine for filling a shape with
+%% triangles.
+%%-----------------------------------------------------------------------
+
+%% Uncomment one of the two "\def" lines below for Big or Small triangles.
+% Bigger triangles
+\def\trianglesize{2*0.125in}
+% Smaller triangles
+%\def\trianglesize{0.125in}
+
+\pgfdeclarepatternformonly
+  % Name of the pattern
+  {triangles}
+  % Set the lower left corner of the pattern
+  {\pgfpointorigin}
+  % Set the upper right corner of the pattern
+  {\pgfpoint{\trianglesize}{2*0.8660254*\trianglesize}}
+  % Declare the size of the pattern blocks
+  {\pgfpoint{\trianglesize}{2*0.8660254*\trianglesize}}
+  % Draw the pattern
+  {
+    \pgfsetlinewidth{0.6pt}
+	\pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+	\pgfpathlineto{\pgfpoint{\trianglesize}{2*0.8660254*\trianglesize}}
+	\pgfpathlineto{\pgfpoint{0mm}{2*0.8660254*\trianglesize}}
+    \pgfpathmoveto{\pgfpoint{0mm}{0.8660254*\trianglesize}}
+	\pgfpathlineto{\pgfpoint{\trianglesize}{0.8660254*\trianglesize}}
+    \pgfpathmoveto{\pgfpoint{0mm}{2*0.8660254*\trianglesize}}
+	\pgfpathlineto{\pgfpoint{\trianglesize}{0mm}}
+	\pgfpathlineto{\pgfpoint{0mm}{0mm}}
+    \pgfusepath{stroke}
+  }
+  
 %%-----------------------------------------------------------------------
 %% This section sets up a routine for filling the squares in a
 %% grid with null lines.
@@ -261,7 +296,7 @@ grid [step=0.125in] (8.125in,10.625in) coordinate (b);
 
 \ifx\usepat\ruledpat
 %% Draw a ruled page with lines every 0.2in
-\draw[style=majorgrid, shift={(current page.south west)},shift={(0.225in,0.1in)}] (0,0.2in) coordinate (a) grid [ystep=0.2in, xstep=8in] (8in,10.6in) coordinate (b);
+\draw[style=majorgrid, shift={(current page.south west)},shift={(0.225in,0.0in)}] (0,0.2in) coordinate (a) grid [ystep=0.2in, xstep=8in] (8in,10.8in) coordinate (b);
 
 %% Draw a ruled page with lines every 0.25in
 %\draw[style=majorgrid, shift={(current page.south west)},shift={(0.225in,0.25in)}] (0,0) coordinate (a) grid [ystep=0.25in, xstep=8in] (8in,10.5in) coordinate (b);
@@ -316,6 +351,22 @@ grid [step=0.125in] (8.125in,10.625in) coordinate (b);
   }
 };
 \fi
+
+
+%%-(Section)-------------------------------------------------------------
+
+%%-----------------------------------------------------------------------
+%% Triangle grid, adjust triangle size in the preamble
+%%-----------------------------------------------------------------------
+
+\ifx\usepat\tripat
+\node at (current page.north west) [anchor=north west, inner sep=0pt, outer sep=0.0in]{
+  \tikz{
+    \fill [pattern=triangles,pattern color=minorcolor] (0,0) rectangle (8.5in,11in);
+  }
+};
+\fi
+
 
 %%-(Section)-------------------------------------------------------------
 
