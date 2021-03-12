@@ -6,7 +6,7 @@
 \RequirePackage{xkeyval}
 \RequirePackage{xcolor}
 \RequirePackage{tikz}
-\usetikzlibrary{patterns,calc}
+\usetikzlibrary{patterns.meta,calc}
 \RequirePackage{tikzpagenodes}
 \RequirePackage{everypage}
 \RequirePackage{pagecolor}
@@ -48,34 +48,28 @@
 \define@choicekey*{GP}{colorset}[\val\nr]%
   % Allowed values for colorset:
   {std,precocious,brickred,engineer,plumpad}[std]{%
-  \PackageInfo{graphpaper}{Got colorset=#1}
   \ifcase\nr\relax
     % std
-    \PackageInfo{graphpaper}{Matched colorset=std}
     \colorlet{minorcolor}{cornflower!30}
     \colorlet{majorcolor}{cornflower!50}
     \colorlet{bgcolor}{white}
   \or
     % precocious
-    \PackageInfo{graphpaper}{Matched colorset=precocious}
     \colorlet{minorcolor}{rosiegrid!50}
     \colorlet{majorcolor}{rosiegrid}
     \colorlet{bgcolor}{rosiebg}
   \or
     % brickred
-    \PackageInfo{graphpaper}{Matched colorset=brickred}
     \colorlet{minorcolor}{brick!35}
     \colorlet{majorcolor}{brick!60}
     \colorlet{bgcolor}{scarlet!8}
   \or
     % engineer
-    \PackageInfo{graphpaper}{Matched colorset=engineer}
     \colorlet{minorcolor}{chameleon!50}
     \colorlet{majorcolor}{chameleon!80}
     \colorlet{bgcolor}{chameleon!10}
   \or
     % plumpad
-    \PackageInfo{graphpaper}{Matched colorset=plumpad}
     \colorlet{minorcolor}{cornflower!40}
     \colorlet{majorcolor}{cornflower!70}
     \colorlet{bgcolor}{plum!10}
@@ -102,6 +96,8 @@
 %% Small hexagons
 %\setkeys{GP}{hexagonsize=0.0833in}
 
+%% TODO This pattern actually has to be declared *after* the options
+%% are parsed, otherwise it won't get its size from the options
 \pgfdeclarepatternformonly
   {hexagons}% name
   {\pgfpointorigin}% lower left
@@ -139,6 +135,8 @@
 %% Smaller triangles
 %\setkeys{GP}{trianglesize=0.125in}
 
+%% TODO This pattern actually has to be declared *after* the options
+%% are parsed, otherwise it won't get its size from the options
 \pgfdeclarepatternformonly
   % Name of the pattern
   {triangles}
@@ -190,22 +188,45 @@
 %%-----------------------------------------------------------------------
 %% TODO Make an option
 \def\squaresize{0.25in}
-\pgfdeclarepatternformonly
-  {lightcones}% name
-  {\pgfpointorigin}% lower left
-  {\pgfpoint{\squaresize}{\squaresize}}%  upper right
-  {\pgfpoint{\squaresize}{\squaresize}}%  tile size
-  {% shape description
-    \pgfsetlinewidth{0.4pt}
-    %% TODO Make an option
-    %Comment out this line for solid lines on light cones, instead of dashes.
-    \pgfsetdash{{0.05cm}{0.05cm}}{0.025cm}
-    \pgfpathmoveto{\pgfpoint{0in}{0in}}
-    \pgfpathlineto{\pgfpoint{\squaresize}{\squaresize}}
-    \pgfpathmoveto{\pgfpoint{0in}{\squaresize}}
-    \pgfpathlineto{\pgfpoint{\squaresize}{0in}}
-    \pgfusepath{stroke}
-  }
+\pgfkeys{
+  /pgf/pattern keys/myshift/.store in=\myshift,
+  /pgf/pattern keys/myshift/.initial={(0,0)},
+}
+\tikzdeclarepattern{
+  name=lightcones,
+  type=uncolored,
+  parameters={\myshift},
+  bounding box={(0,0) and (\squaresize,\squaresize)},
+  tile size={(\squaresize, \squaresize)},
+  tile transformation={
+    shift=\myshift,
+  },
+  defaults={
+    myshift/.store in=\myshift,myshift={(0,0)},
+  },
+  code={
+    % TODO Make the dashing an option
+    \tikzset{lightlines/.style={line width=0.4pt,dash=on 0.05cm off 0.05cm phase 0.025cm}}
+    \draw [lightlines] (0,0) -- (\squaresize,\squaresize);
+    \draw [lightlines] (0,\squaresize) -- (\squaresize,0);
+  },
+}
+% \pgfdeclarepatternformonly
+%   {lightcones}% name
+%   {\pgfpointorigin}% lower left
+%   {\pgfpoint{\squaresize}{\squaresize}}%  upper right
+%   {\pgfpoint{\squaresize}{\squaresize}}%  tile size
+%   {% shape description
+%     \pgfsetlinewidth{0.4pt}
+%     %% TODO Make an option
+%     %Comment out this line for solid lines on light cones, instead of dashes.
+%     \pgfsetdash{{0.05cm}{0.05cm}}{0.025cm}
+%     \pgfpathmoveto{\pgfpoint{0in}{0in}}
+%     \pgfpathlineto{\pgfpoint{\squaresize}{\squaresize}}
+%     \pgfpathmoveto{\pgfpoint{0in}{\squaresize}}
+%     \pgfpathlineto{\pgfpoint{\squaresize}{0in}}
+%     \pgfusepath{stroke}
+%   }
 
 %%-----------------------------------------------------------------------
 %% This section sets up a routine for filling a region with dots
@@ -239,7 +260,7 @@
   }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Begin actual pattern execution code
+%% Begin pattern execution infrastructure
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % This inner code will be set by the choicekey pattern=...
@@ -254,11 +275,11 @@
   majorgrid/.style={majorcolor, thin},
 }
 \ifKV@GP@fullpage%
-\coordinate (a) at (current page.north west);
-\coordinate (b) at (current page.south east);
+\coordinate (a) at (current page.south west);
+\coordinate (b) at (current page.north east);
 \else%
-\coordinate (a) at (current page text area.north west);
-\coordinate (b) at (current page text area.south east);
+\coordinate (a) at (current page text area.south west);
+\coordinate (b) at (current page text area.north east);
 \fi
 %
 \innerpatterncode%
@@ -272,48 +293,122 @@
 \patterncode%
 }
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Begin pattern definition code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \define@choicekey*{GP}{pattern}[\val\nr]%
+  % Allowed values for pattern:
   {std,stdeight,majmin,dot,hex,tri,iso,lightcone,ruled,doubleruled}[std]{%
-  \PackageInfo{graphpaper}{Got pattern=#1}
   \ifcase\nr\relax
     % std
-    \PackageInfo{graphpaper}{Matched pattern=std}
+%%-----------------------------------------------------------------------
+%% Quadrille, ten squares per inch.
+%%-----------------------------------------------------------------------
+    \renewcommand{\innerpatterncode}{%
+%% Draw a grid with 10 squares per inch.
+\draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.1in] (b);
+%
+%% Draw a frame around the grid.
+\draw[style=majorgrid] (a) rectangle (b);
+    }
   \or
     % stdeight
-    \PackageInfo{graphpaper}{Matched pattern=stdeight}
+%%-----------------------------------------------------------------------
+%% Quadrille, eight squares per inch.
+%%-----------------------------------------------------------------------
+    \renewcommand{\innerpatterncode}{%
+%% Draw a grid with 10 squares per inch.
+\draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.125in] (b);
+%
+%% Draw a frame around the grid.
+\draw[style=majorgrid] (a) rectangle (b);
+    }
   \or
     % majmin
-    \PackageInfo{graphpaper}{Matched pattern=majmin}
+%%-----------------------------------------------------------------------
+%% Graph paper, eight squares per inch with a major grid
+%% every half-inch.
+%%-----------------------------------------------------------------------
     \renewcommand{\innerpatterncode}{%
-      % Draw a grid with 10 squares per inch.
-      \draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.125in] (b);
-      %
-      \draw[style=majorgrid, shift={(a)}] (0,0) grid [step=0.5in]   (b);
-      %
-      % Draw a frame around the grid.
-      \draw[style=majorgrid, shift={(a)}] (0,0) rectangle (b);
+% Draw a grid with 10 squares per inch.
+\draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.125in] (b);
+%
+\draw[style=majorgrid, shift={(a)}] (0,0) grid [step=0.5in]   (b);
+%
+% Draw a frame around the grid.
+\draw[style=majorgrid] (a) rectangle (b);
     }
   \or
     % dot
-    \PackageInfo{graphpaper}{Matched pattern=dot}
+%%-----------------------------------------------------------------------
+%% Dot grid
+%% Slightly modified version of code added by Leo
+%% Stein (@duetosymmetry).
+%%-----------------------------------------------------------------------
+    \renewcommand{\innerpatterncode}{%
+    \fill [pattern=dotgrid,pattern color=minorcolor] (a) rectangle (b);
+    }
   \or
     % hex
-    \PackageInfo{graphpaper}{Matched pattern=hex}
+%%-----------------------------------------------------------------------
+%% Hex grid
+%%-----------------------------------------------------------------------
+    \renewcommand{\innerpatterncode}{%
+    \fill [pattern=hexagons,pattern color=minorcolor] (a) rectangle (b);
+    }
   \or
     % tri
-    \PackageInfo{graphpaper}{Matched pattern=tri}
+%%-----------------------------------------------------------------------
+%% Triangle grid, adjust triangle size in the preamble
+%%-----------------------------------------------------------------------
+    \renewcommand{\innerpatterncode}{%
+      \fill [pattern=triangles,pattern color=minorcolor] (a) rectangle (b);
+    }
   \or
     % iso
-    \PackageInfo{graphpaper}{Matched pattern=iso}
+%%-----------------------------------------------------------------------
+%% Isometric grid
+%%-----------------------------------------------------------------------
+    \renewcommand{\innerpatterncode}{%
+      \fill [pattern=isometric, pattern color=minorcolor] (a) rectangle (b);
+    }
   \or
     % lightcone
-    \PackageInfo{graphpaper}{Matched pattern=lightcone}
+%%-----------------------------------------------------------------------
+%% A grid with light cones.
+%%-----------------------------------------------------------------------
+    \renewcommand{\innerpatterncode}{%
+%% Draw a grid with 4 squares per inch.
+\draw[style=minorgrid, shift={(a)}] (0,0) coordinate grid [step=0.25in] (b);
+%
+%% Draw a border around the grid.
+\draw[style=majorgrid, pattern={lightcones[myshift={(a)}]}, pattern color=lightlines] (a) rectangle (b);
+    }
   \or
     % ruled
-    \PackageInfo{graphpaper}{Matched pattern=ruled}
+%%-----------------------------------------------------------------------
+%% Ruled page with bold lines every 0.2in or 0.25in
+%%-----------------------------------------------------------------------
+    \renewcommand{\innerpatterncode}{%
+%% Draw a ruled page with lines every 0.2in
+\draw[style=majorgrid, shift={(a)}] (0,0) grid [ystep=0.2in, xstep=\pagewidth] (b);
+    }
   \or
     % doubleruled
-    \PackageInfo{graphpaper}{Matched pattern=doubleruled}
+%%-----------------------------------------------------------------------
+%% Ruled page with bold lines every 0.25in and light lines
+%% every 0.125 in.
+%%-----------------------------------------------------------------------
+    \renewcommand{\innerpatterncode}{%
+%% Draw a ruled pattern with thin lines every 0.125 in and bold lines every 0.25 in.
+\draw[style=minorgrid, shift={(a)}] (0,0) grid [ystep=0.125in, xstep=\pagewidth] (b);
+%
+\draw[style=majorgrid, shift={(a)}] (0,0) grid [ystep=0.25in, xstep=\pagewidth] (b);
+%
+%% Draw a frame around the grid.
+\draw[style=majorgrid] (a) rectangle (b);
+    }
   \fi
 }
 
@@ -325,12 +420,18 @@
 \DeclareOptionX{colorset}{\setkeys{GP}{colorset=#1}}
 % TODO: Should we just have a majsize and minsize and use for all patterns?
 \DeclareOptionX{hexagonsize}{\setkeys{GP}{hexagonsize=#1}}
+\DeclareOptionX{trianglesize}{\setkeys{GP}{trianglesize=#1}}
+\DeclareOptionX{dotgridsize}{\setkeys{GP}{dotgridsize=#1}}
+\DeclareOptionX{dotsize}{\setkeys{GP}{dotsize=#1}}
 \DeclareOptionX{fullpage}{\setkeys{GP}{fullpage=true}}
 \DeclareOptionX{textarea}{\setkeys{GP}{fullpage=false}}
+\DeclareOptionX{majorcolor}{\colorlet{majorcolor}{#1}}
+\DeclareOptionX{minorcolor}{\colorlet{minorcolor}{#1}}
+\DeclareOptionX{bgcolor}{\colorlet{bgcolor}{#1}}
 \DeclareOptionX*{%
   \PackageWarning{graphpaper}{Unknown option ‘\CurrentOption’}%
 }
-\ProcessOptionsX
+\ProcessOptionsX*
 
 \endinput
 %%
