@@ -1,0 +1,337 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{graphpaper}
+    [2021/03/12 v1.0.0 Graph paper backgrounds]
+%% TODO: Fix metadata above
+
+\RequirePackage{xkeyval}
+\RequirePackage{xcolor}
+\RequirePackage{tikz}
+\usetikzlibrary{patterns,calc}
+\RequirePackage{tikzpagenodes}
+\RequirePackage{everypage}
+\RequirePackage{pagecolor}
+
+
+%% TODO: Process options and pass to geometry
+\RequirePackage{geometry}
+
+
+%%-----------------------------------------------------------------------
+%% Some nice colors.
+%%-----------------------------------------------------------------------
+\definecolor{plum}{rgb}{0.36078, 0.20784, 0.4}
+\definecolor{chameleon}{rgb}{0.30588, 0.60392, 0.023529}
+\definecolor{cornflower}{rgb}{0.12549, 0.29020, 0.52941}
+\definecolor{scarlet}{rgb}{0.8, 0, 0}
+\definecolor{brick}{rgb}{0.64314, 0, 0}
+\definecolor{sunrise}{rgb}{0.80784, 0.36078, 0}
+\definecolor{rosiebg}{RGB}{250,247,232}
+\definecolor{rosiegrid}{RGB}{186,137,113}
+
+%%-----------------------------------------------------------------------
+%% The color to use for the null directions when drawing lightcones.
+%%-----------------------------------------------------------------------
+\colorlet{lightlines}{scarlet!30}
+
+%%-----------------------------------------------------------------------
+%% Pre-defined Color schemes
+%%-----------------------------------------------------------------------
+%% Here are some pre-defined color schemes for the paper background
+%% and the major and minor grid lines.  These are switched by using
+%% the option colorset=<name>.  The allowed values for colorset are in
+%% the list below.
+%%
+%% TODO Move this comment to an example file
+%% A number of rgb colors are defined above. You can make either one
+%% darker by changing the number after the "!". For instance,
+%% cornflower!75 is darker than cornflower!25.
+\define@choicekey*{GP}{colorset}[\val\nr]%
+  % Allowed values for colorset:
+  {std,precocious,brickred,engineer,plumpad}[std]{%
+  \PackageInfo{graphpaper}{Got colorset=#1}
+  \ifcase\nr\relax
+    % std
+    \PackageInfo{graphpaper}{Matched colorset=std}
+    \colorlet{minorcolor}{cornflower!30}
+    \colorlet{majorcolor}{cornflower!50}
+    \colorlet{bgcolor}{white}
+  \or
+    % precocious
+    \PackageInfo{graphpaper}{Matched colorset=precocious}
+    \colorlet{minorcolor}{rosiegrid!50}
+    \colorlet{majorcolor}{rosiegrid}
+    \colorlet{bgcolor}{rosiebg}
+  \or
+    % brickred
+    \PackageInfo{graphpaper}{Matched colorset=brickred}
+    \colorlet{minorcolor}{brick!35}
+    \colorlet{majorcolor}{brick!60}
+    \colorlet{bgcolor}{scarlet!8}
+  \or
+    % engineer
+    \PackageInfo{graphpaper}{Matched colorset=engineer}
+    \colorlet{minorcolor}{chameleon!50}
+    \colorlet{majorcolor}{chameleon!80}
+    \colorlet{bgcolor}{chameleon!10}
+  \or
+    % plumpad
+    \PackageInfo{graphpaper}{Matched colorset=plumpad}
+    \colorlet{minorcolor}{cornflower!40}
+    \colorlet{majorcolor}{cornflower!70}
+    \colorlet{bgcolor}{plum!10}
+  \fi
+}
+
+% Start with std as a default
+\setkeys{GP}{colorset=std}
+
+%%-----------------------------------------------------------------------
+%% This section sets up a routine for filling a shape with
+%% hexagons. Uses code from:
+%% http://tex.stackexchange.com/questions/6019/drawing-hexagons/6128#6128
+%%-----------------------------------------------------------------------
+
+%% Hexagon size
+%% QUESTION: Should we just have 'majorsize' and 'minorsize' and use
+%% that value here?
+\define@key{GP}{hexagonsize}{\def\hexagonsize{#1}}
+
+%% Start with big hexagons as a default
+\setkeys{GP}{hexagonsize=0.1666in}
+%% TODO Move this to an example file
+%% Small hexagons
+%\setkeys{GP}{hexagonsize=0.0833in}
+
+\pgfdeclarepatternformonly
+  {hexagons}% name
+  {\pgfpointorigin}% lower left
+  {\pgfpoint{3*\hexagonsize}{0.866025*2*\hexagonsize}}
+  {\pgfpoint{3*\hexagonsize}{0.866025*2*\hexagonsize}}
+  {
+    \pgfsetlinewidth{0.6pt}
+    \pgftransformshift{\pgfpoint{0mm}{0.866025*\hexagonsize}}
+    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+    \pgfpathlineto{\pgfpoint{0.5*\hexagonsize}{0mm}}
+    \pgfpathlineto{\pgfpoint{\hexagonsize}{-0.866025*\hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2*\hexagonsize}{-0.866025*\hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2.5*\hexagonsize}{0mm}}
+    \pgfpathlineto{\pgfpoint{3*\hexagonsize}{0mm}}
+    \pgfpathmoveto{\pgfpoint{0.5*\hexagonsize}{0mm}}
+    \pgfpathlineto{\pgfpoint{\hexagonsize}{0.866025*\hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2*\hexagonsize}{0.866025*\hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2.5*\hexagonsize}{0mm}}
+    \pgfusepath{stroke}
+  }
+
+%%-----------------------------------------------------------------------
+%% This section sets up a routine for filling a shape with
+%% triangles.
+%%-----------------------------------------------------------------------
+
+%% Triangle size
+%% QUESTION: Should we just have 'majorsize' and 'minorsize' and use
+%% that value here?
+\define@key{GP}{trianglesize}{\def\trianglesize{#1}}
+
+%% Start with bigger triangles as a default
+\setkeys{GP}{trianglesize=2*0.125in}
+%% TODO Move this to an example file
+%% Smaller triangles
+%\setkeys{GP}{trianglesize=0.125in}
+
+\pgfdeclarepatternformonly
+  % Name of the pattern
+  {triangles}
+  % Set the lower left corner of the pattern
+  {\pgfpointorigin}
+  % Set the upper right corner of the pattern
+  {\pgfpoint{\trianglesize}{2*0.8660254*\trianglesize}}
+  % Declare the size of the pattern blocks
+  {\pgfpoint{\trianglesize}{2*0.8660254*\trianglesize}}
+  % Draw the pattern
+  {
+    \pgfsetlinewidth{0.6pt}
+  \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+  \pgfpathlineto{\pgfpoint{\trianglesize}{2*0.8660254*\trianglesize}}
+  \pgfpathlineto{\pgfpoint{0mm}{2*0.8660254*\trianglesize}}
+    \pgfpathmoveto{\pgfpoint{0mm}{0.8660254*\trianglesize}}
+  \pgfpathlineto{\pgfpoint{\trianglesize}{0.8660254*\trianglesize}}
+    \pgfpathmoveto{\pgfpoint{0mm}{2*0.8660254*\trianglesize}}
+  \pgfpathlineto{\pgfpoint{\trianglesize}{0mm}}
+  \pgfpathlineto{\pgfpoint{0mm}{0mm}}
+    \pgfusepath{stroke}
+  }
+
+\pgfdeclarepatternformonly
+  % Name of the pattern
+  {isometric}
+  % Set the lower left corner of the pattern
+  {\pgfpointorigin}
+  % Set the upper right corner of the pattern
+  {\pgfpoint{2*0.8660254*\trianglesize}{\trianglesize}}
+  % Declare the size of the pattern blocks
+  {\pgfpoint{2*0.8660254*\trianglesize}{\trianglesize}}
+  % Draw the pattern
+  {
+    \pgfsetlinewidth{0.6pt}
+  \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+  \pgfpathlineto{\pgfpoint{2*0.8660254*\trianglesize}{\trianglesize}}
+  \pgfpathlineto{\pgfpoint{2*0.8660254*\trianglesize}{0mm}}
+  \pgfpathlineto{\pgfpoint{0mm}{\trianglesize}}
+  \pgfpathlineto{\pgfpoint{0mm}{0mm}}
+    \pgfpathmoveto{\pgfpoint{0.8660254*\trianglesize}{0mm}}
+    \pgfpathlineto{\pgfpoint{0.8660254*\trianglesize}{\trianglesize}}
+    \pgfusepath{stroke}
+  }
+
+%%-----------------------------------------------------------------------
+%% This section sets up a routine for filling the squares in a
+%% grid with null lines.
+%%-----------------------------------------------------------------------
+%% TODO Make an option
+\def\squaresize{0.25in}
+\pgfdeclarepatternformonly
+  {lightcones}% name
+  {\pgfpointorigin}% lower left
+  {\pgfpoint{\squaresize}{\squaresize}}%  upper right
+  {\pgfpoint{\squaresize}{\squaresize}}%  tile size
+  {% shape description
+    \pgfsetlinewidth{0.4pt}
+    %% TODO Make an option
+    %Comment out this line for solid lines on light cones, instead of dashes.
+    \pgfsetdash{{0.05cm}{0.05cm}}{0.025cm}
+    \pgfpathmoveto{\pgfpoint{0in}{0in}}
+    \pgfpathlineto{\pgfpoint{\squaresize}{\squaresize}}
+    \pgfpathmoveto{\pgfpoint{0in}{\squaresize}}
+    \pgfpathlineto{\pgfpoint{\squaresize}{0in}}
+    \pgfusepath{stroke}
+  }
+
+%%-----------------------------------------------------------------------
+%% This section sets up a routine for filling a region with dots
+%% Slightly modified version of code added by Leo
+%% Stein (@duetosymmetry on Twitter).
+%%-----------------------------------------------------------------------
+%% Dot grid size
+%% QUESTION: Should we just have 'majorsize' and 'minorsize' and use
+%% that value here?
+\define@key{GP}{dotgridsize}{\def\dotgridsquaresize{#1}}
+
+%% Start with small squares as a default
+\setkeys{GP}{dotgridsize=0.1in}
+%% TODO Move this to an example file
+%% Big squares
+%\setkeys{GP}{dotgridsize=0.2in}
+
+%% Dot size
+\define@key{GP}{dotsize}{\def\dotsize{#1}}
+
+\setkeys{GP}{dotsize=.7pt}
+
+\pgfdeclarepatternformonly
+  {dotgrid}% name
+  {\pgfpoint{-0.5*\dotgridsquaresize}{-0.5*\dotgridsquaresize}}% lower left
+  {\pgfpoint{0.5*\dotgridsquaresize}{0.5*\dotgridsquaresize}}%  upper right
+  {\pgfpoint{\dotgridsquaresize}{\dotgridsquaresize}}%  tile size
+  {% shape description
+    \pgfpathcircle{\pgfqpoint{0pt}{0pt}}{\dotsize}
+    \pgfusepath{fill}
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Begin actual pattern execution code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% This inner code will be set by the choicekey pattern=...
+\newcommand{\innerpatterncode}{}
+% This is the "outer" code to hook into every page
+\newcommand{\patterncode}{% No blank lines in this code!
+\begin{tikzpicture}[remember picture, overlay]
+%
+%% Change "thin" to "very thin" if the lines are too thick.
+\tikzset{
+  minorgrid/.style={minorcolor, thin},
+  majorgrid/.style={majorcolor, thin},
+}
+\ifKV@GP@fullpage%
+\coordinate (a) at (current page.north west);
+\coordinate (b) at (current page.south east);
+\else%
+\coordinate (a) at (current page text area.north west);
+\coordinate (b) at (current page text area.south east);
+\fi
+%
+\innerpatterncode%
+%
+\end{tikzpicture}
+}
+%% Set the background color.
+\AtBeginDocument{\pagecolor{bgcolor}}
+% Actually hook it in!
+\AddEverypageHook{%
+\patterncode%
+}
+
+\define@choicekey*{GP}{pattern}[\val\nr]%
+  {std,stdeight,majmin,dot,hex,tri,iso,lightcone,ruled,doubleruled}[std]{%
+  \PackageInfo{graphpaper}{Got pattern=#1}
+  \ifcase\nr\relax
+    % std
+    \PackageInfo{graphpaper}{Matched pattern=std}
+  \or
+    % stdeight
+    \PackageInfo{graphpaper}{Matched pattern=stdeight}
+  \or
+    % majmin
+    \PackageInfo{graphpaper}{Matched pattern=majmin}
+    \renewcommand{\innerpatterncode}{%
+      % Draw a grid with 10 squares per inch.
+      \draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.125in] (b);
+      %
+      \draw[style=majorgrid, shift={(a)}] (0,0) grid [step=0.5in]   (b);
+      %
+      % Draw a frame around the grid.
+      \draw[style=majorgrid, shift={(a)}] (0,0) rectangle (b);
+    }
+  \or
+    % dot
+    \PackageInfo{graphpaper}{Matched pattern=dot}
+  \or
+    % hex
+    \PackageInfo{graphpaper}{Matched pattern=hex}
+  \or
+    % tri
+    \PackageInfo{graphpaper}{Matched pattern=tri}
+  \or
+    % iso
+    \PackageInfo{graphpaper}{Matched pattern=iso}
+  \or
+    % lightcone
+    \PackageInfo{graphpaper}{Matched pattern=lightcone}
+  \or
+    % ruled
+    \PackageInfo{graphpaper}{Matched pattern=ruled}
+  \or
+    % doubleruled
+    \PackageInfo{graphpaper}{Matched pattern=doubleruled}
+  \fi
+}
+
+% Do we want the background to be fullpage?
+% Default: yes
+\define@boolkey{GP}{fullpage}{}
+
+\DeclareOptionX{pattern}{\setkeys{GP}{pattern=#1}}
+\DeclareOptionX{colorset}{\setkeys{GP}{colorset=#1}}
+% TODO: Should we just have a majsize and minsize and use for all patterns?
+\DeclareOptionX{hexagonsize}{\setkeys{GP}{hexagonsize=#1}}
+\DeclareOptionX{fullpage}{\setkeys{GP}{fullpage=true}}
+\DeclareOptionX{textarea}{\setkeys{GP}{fullpage=false}}
+\DeclareOptionX*{%
+  \PackageWarning{graphpaper}{Unknown option ‘\CurrentOption’}%
+}
+\ProcessOptionsX
+
+\endinput
+%%
+%% End of file `graphpaper.sty'.
