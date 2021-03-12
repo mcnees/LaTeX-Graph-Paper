@@ -392,7 +392,7 @@
 %%-----------------------------------------------------------------------
     \renewcommand{\innerpatterncode}{%
 %% Draw a ruled page with lines every 0.2in
-\draw[style=majorgrid, shift={(a)}] (0,0) grid [ystep=0.2in, xstep=\pagewidth] (b);
+\draw[style=majorgrid, shift={(a)}] (0,0) grid [ystep=0.2in, xstep=\paperwidth] (b);
     }
   \or
     % doubleruled
@@ -402,9 +402,9 @@
 %%-----------------------------------------------------------------------
     \renewcommand{\innerpatterncode}{%
 %% Draw a ruled pattern with thin lines every 0.125 in and bold lines every 0.25 in.
-\draw[style=minorgrid, shift={(a)}] (0,0) grid [ystep=0.125in, xstep=\pagewidth] (b);
+\draw[style=minorgrid, shift={(a)}] (0,0) grid [ystep=0.125in, xstep=\paperwidth] (b);
 %
-\draw[style=majorgrid, shift={(a)}] (0,0) grid [ystep=0.25in, xstep=\pagewidth] (b);
+\draw[style=majorgrid, shift={(a)}] (0,0) grid [ystep=0.25in, xstep=\paperwidth] (b);
 %
 %% Draw a frame around the grid.
 \draw[style=majorgrid] (a) rectangle (b);

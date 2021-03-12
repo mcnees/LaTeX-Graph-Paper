@@ -1,0 +1,10 @@
+\documentclass{article}
+
+\usepackage[%PAPERSIZE%]{geometry}
+
+\usepackage[pattern=%PATTERN%, colorset=%COLORSET%, %AREA%]{graphpaper}
+
+\begin{document}
+\thispagestyle{empty}
+~
+\end{document}
