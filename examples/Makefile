@@ -29,7 +29,7 @@ tex-examples:
 .PHONY: clean reallyclean
 
 clean:
-	rm -f *.aux *.log
+	rm -f *.aux *.log *.synctex.gz *~
 
 reallyclean: clean
 	rm -f *-*-*-*.tex
