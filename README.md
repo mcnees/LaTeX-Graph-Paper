@@ -5,8 +5,13 @@
 # LaTeX-Graph-Paper
 Make your own quadrille, graph, hex, etc. paper! Uses the [PGF/TikZ](https://en.wikipedia.org/wiki/PGF/TikZ) package for LaTeX, which should be part of any modern TeX installation. All colors and spacing are customizable.
 
-First, clone or download the repo.  There are some example .tex files
-in the [examples directory](./examples/) to help get you started.
+Once you clone or download the repo, simply run latex twice on the
+file "graph paper.tex" to produce a pdf. From the command line, type:
+
+    pdflatex "graph paper.tex"
+
+There are more example .tex files in the [examples
+directory](./examples/) to help get you started with customization.
 Each tex file has an almost-empty body, with a `\usepackage` statement
 that you can customize.  For example,
 [engineer-pad.tex](./examples/engineer-pad.tex) looks like this:
