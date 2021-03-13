@@ -4,6 +4,7 @@
 %% TODO: Fix metadata above
 
 \RequirePackage{xkeyval}
+\RequirePackage{kvoptions}
 \RequirePackage{xcolor}
 \RequirePackage{tikz}
 \usetikzlibrary{patterns.meta,calc}
@@ -11,10 +12,64 @@
 \RequirePackage{everypage}
 \RequirePackage{pagecolor}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Option parsing
+%% Declare switches for processing the options.
 
-%% TODO: Process options and pass to geometry
-\RequirePackage{geometry}
+\newif\ifGP@geometrypreviouslyloaded
+\newif\ifGP@fullpage
+\newif\ifGP@textarea
+\GP@geometrypreviouslyloadedfalse
+\GP@fullpagefalse
+\GP@textareafalse
 
+\SetupKeyvalOptions{%
+  family=GP,%
+  prefix=GPOpt@%
+}
+
+\DeclareStringOption[std]{pattern}
+\DeclareStringOption[std]{colorset}
+
+\DeclareStringOption{majorcolor}
+\DeclareStringOption{minorcolor}
+\DeclareStringOption{bgcolor}
+
+\DeclareStringOption[0.1666in]{hexagonsize}
+\DeclareStringOption[2*0.125in]{trianglesize}
+\DeclareStringOption[0.1in]{dotgridsize}
+\DeclareStringOption[.7pt]{dotsize}
+
+\DeclareVoidOption{fullpage}{\GP@fullpagetrue}
+\DeclareVoidOption{textarea}{\GP@textareatrue}
+
+\DeclareStringOption{geometry}
+
+\ProcessKeyvalOptions*
+
+\typeout{HELLO Got \GPOpt@pattern}
+\typeout{HELLO Got \GPOpt@colorset}
+
+% Can only have one of fullpage or textarea
+\ifGP@fullpage
+  \ifGP@textarea
+    \PackageError{graphpaper}{%
+      Can not specify both fullpage and textarea, please remove one option}{}
+  \fi
+\fi
+
+% We keep track of this to know whether or not we would be overriding
+% a previously-set page geometry
+\@ifpackageloaded{geometry}
+  {\GP@geometrypreviouslyloadedtrue}
+  {\GP@geometrypreviouslyloadedfalse%
+    \PassOptionsToPackage{\GPOpt@geometry}{geometry}%
+    \RequirePackage{geometry}%
+  }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Actual package code
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%-----------------------------------------------------------------------
 %% Some nice colors.
@@ -76,8 +131,26 @@
   \fi
 }
 
-% Start with std as a default
-\setkeys{GP}{colorset=std}
+% Get the specified color set from the options
+\def\@setkeyhelper#1#2{%
+  \setkeys{GP}{#2=#1}
+}
+\expandafter\@setkeyhelper\expandafter{\GPOpt@colorset}{colorset}
+
+% If the user further specified majorcolor, minorcolor, and/or
+% bgcolor, we now override the selected colorset
+\ifx\GPOpt@majorcolor\@empty
+\else
+  \colorlet{majorcolor}{\GPOpt@majorcolor}
+\fi
+\ifx\GPOpt@minorcolor\@empty
+\else
+  \colorlet{minorcolor}{\GPOpt@minorcolor}
+\fi
+\ifx\GPOpt@bgcolor\@empty
+\else
+  \colorlet{bgcolor}{\GPOpt@bgcolor}
+\fi
 
 %%-----------------------------------------------------------------------
 %% This section sets up a routine for filling a shape with
@@ -85,37 +158,29 @@
 %% http://tex.stackexchange.com/questions/6019/drawing-hexagons/6128#6128
 %%-----------------------------------------------------------------------
 
-%% Hexagon size
+%% Hexagon size controlled by \GPOpt@hexagonsize
 %% QUESTION: Should we just have 'majorsize' and 'minorsize' and use
 %% that value here?
-\define@key{GP}{hexagonsize}{\def\hexagonsize{#1}}
+%% TODO Move to an example file: Small hexagons 0.0833in
 
-%% Start with big hexagons as a default
-\setkeys{GP}{hexagonsize=0.1666in}
-%% TODO Move this to an example file
-%% Small hexagons
-%\setkeys{GP}{hexagonsize=0.0833in}
-
-%% TODO This pattern actually has to be declared *after* the options
-%% are parsed, otherwise it won't get its size from the options
 \pgfdeclarepatternformonly
   {hexagons}% name
   {\pgfpointorigin}% lower left
-  {\pgfpoint{3*\hexagonsize}{0.866025*2*\hexagonsize}}
-  {\pgfpoint{3*\hexagonsize}{0.866025*2*\hexagonsize}}
+  {\pgfpoint{3*\GPOpt@hexagonsize}{0.866025*2*\GPOpt@hexagonsize}}
+  {\pgfpoint{3*\GPOpt@hexagonsize}{0.866025*2*\GPOpt@hexagonsize}}
   {
     \pgfsetlinewidth{0.6pt}
-    \pgftransformshift{\pgfpoint{0mm}{0.866025*\hexagonsize}}
+    \pgftransformshift{\pgfpoint{0mm}{0.866025*\GPOpt@hexagonsize}}
     \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-    \pgfpathlineto{\pgfpoint{0.5*\hexagonsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{\hexagonsize}{-0.866025*\hexagonsize}}
-    \pgfpathlineto{\pgfpoint{2*\hexagonsize}{-0.866025*\hexagonsize}}
-    \pgfpathlineto{\pgfpoint{2.5*\hexagonsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{3*\hexagonsize}{0mm}}
-    \pgfpathmoveto{\pgfpoint{0.5*\hexagonsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{\hexagonsize}{0.866025*\hexagonsize}}
-    \pgfpathlineto{\pgfpoint{2*\hexagonsize}{0.866025*\hexagonsize}}
-    \pgfpathlineto{\pgfpoint{2.5*\hexagonsize}{0mm}}
+    \pgfpathlineto{\pgfpoint{0.5*\GPOpt@hexagonsize}{0mm}}
+    \pgfpathlineto{\pgfpoint{\GPOpt@hexagonsize}{-0.866025*\GPOpt@hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2*\GPOpt@hexagonsize}{-0.866025*\GPOpt@hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2.5*\GPOpt@hexagonsize}{0mm}}
+    \pgfpathlineto{\pgfpoint{3*\GPOpt@hexagonsize}{0mm}}
+    \pgfpathmoveto{\pgfpoint{0.5*\GPOpt@hexagonsize}{0mm}}
+    \pgfpathlineto{\pgfpoint{\GPOpt@hexagonsize}{0.866025*\GPOpt@hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2*\GPOpt@hexagonsize}{0.866025*\GPOpt@hexagonsize}}
+    \pgfpathlineto{\pgfpoint{2.5*\GPOpt@hexagonsize}{0mm}}
     \pgfusepath{stroke}
   }
 
@@ -124,38 +189,30 @@
 %% triangles.
 %%-----------------------------------------------------------------------
 
-%% Triangle size
+%% Triangle size controlled by \GPOpt@trianglesize
 %% QUESTION: Should we just have 'majorsize' and 'minorsize' and use
 %% that value here?
-\define@key{GP}{trianglesize}{\def\trianglesize{#1}}
+%% TODO Move to an example file: Smaller triangles 0.125in
 
-%% Start with bigger triangles as a default
-\setkeys{GP}{trianglesize=2*0.125in}
-%% TODO Move this to an example file
-%% Smaller triangles
-%\setkeys{GP}{trianglesize=0.125in}
-
-%% TODO This pattern actually has to be declared *after* the options
-%% are parsed, otherwise it won't get its size from the options
 \pgfdeclarepatternformonly
   % Name of the pattern
   {triangles}
   % Set the lower left corner of the pattern
   {\pgfpointorigin}
   % Set the upper right corner of the pattern
-  {\pgfpoint{\trianglesize}{2*0.8660254*\trianglesize}}
+  {\pgfpoint{\GPOpt@trianglesize}{2*0.8660254*\GPOpt@trianglesize}}
   % Declare the size of the pattern blocks
-  {\pgfpoint{\trianglesize}{2*0.8660254*\trianglesize}}
+  {\pgfpoint{\GPOpt@trianglesize}{2*0.8660254*\GPOpt@trianglesize}}
   % Draw the pattern
   {
     \pgfsetlinewidth{0.6pt}
   \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-  \pgfpathlineto{\pgfpoint{\trianglesize}{2*0.8660254*\trianglesize}}
-  \pgfpathlineto{\pgfpoint{0mm}{2*0.8660254*\trianglesize}}
-    \pgfpathmoveto{\pgfpoint{0mm}{0.8660254*\trianglesize}}
-  \pgfpathlineto{\pgfpoint{\trianglesize}{0.8660254*\trianglesize}}
-    \pgfpathmoveto{\pgfpoint{0mm}{2*0.8660254*\trianglesize}}
-  \pgfpathlineto{\pgfpoint{\trianglesize}{0mm}}
+  \pgfpathlineto{\pgfpoint{\GPOpt@trianglesize}{2*0.8660254*\GPOpt@trianglesize}}
+  \pgfpathlineto{\pgfpoint{0mm}{2*0.8660254*\GPOpt@trianglesize}}
+    \pgfpathmoveto{\pgfpoint{0mm}{0.8660254*\GPOpt@trianglesize}}
+  \pgfpathlineto{\pgfpoint{\GPOpt@trianglesize}{0.8660254*\GPOpt@trianglesize}}
+    \pgfpathmoveto{\pgfpoint{0mm}{2*0.8660254*\GPOpt@trianglesize}}
+  \pgfpathlineto{\pgfpoint{\GPOpt@trianglesize}{0mm}}
   \pgfpathlineto{\pgfpoint{0mm}{0mm}}
     \pgfusepath{stroke}
   }
@@ -166,26 +223,27 @@
   % Set the lower left corner of the pattern
   {\pgfpointorigin}
   % Set the upper right corner of the pattern
-  {\pgfpoint{2*0.8660254*\trianglesize}{\trianglesize}}
+  {\pgfpoint{2*0.8660254*\GPOpt@trianglesize}{\GPOpt@trianglesize}}
   % Declare the size of the pattern blocks
-  {\pgfpoint{2*0.8660254*\trianglesize}{\trianglesize}}
+  {\pgfpoint{2*0.8660254*\GPOpt@trianglesize}{\GPOpt@trianglesize}}
   % Draw the pattern
   {
     \pgfsetlinewidth{0.6pt}
   \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-  \pgfpathlineto{\pgfpoint{2*0.8660254*\trianglesize}{\trianglesize}}
-  \pgfpathlineto{\pgfpoint{2*0.8660254*\trianglesize}{0mm}}
-  \pgfpathlineto{\pgfpoint{0mm}{\trianglesize}}
+  \pgfpathlineto{\pgfpoint{2*0.8660254*\GPOpt@trianglesize}{\GPOpt@trianglesize}}
+  \pgfpathlineto{\pgfpoint{2*0.8660254*\GPOpt@trianglesize}{0mm}}
+  \pgfpathlineto{\pgfpoint{0mm}{\GPOpt@trianglesize}}
   \pgfpathlineto{\pgfpoint{0mm}{0mm}}
-    \pgfpathmoveto{\pgfpoint{0.8660254*\trianglesize}{0mm}}
-    \pgfpathlineto{\pgfpoint{0.8660254*\trianglesize}{\trianglesize}}
+    \pgfpathmoveto{\pgfpoint{0.8660254*\GPOpt@trianglesize}{0mm}}
+    \pgfpathlineto{\pgfpoint{0.8660254*\GPOpt@trianglesize}{\GPOpt@trianglesize}}
     \pgfusepath{stroke}
   }
 
 %%-----------------------------------------------------------------------
 %% This section sets up a routine for filling the squares in a
 %% grid with null lines.
-%%-----------------------------------------------------------------------
+%% -----------------------------------------------------------------------
+%% TODO Still can't figure out the correct pattern shift!!
 %% TODO Make an option
 \def\squaresize{0.25in}
 \pgfkeys{
@@ -233,29 +291,18 @@
 %% Slightly modified version of code added by Leo
 %% Stein (@duetosymmetry on Twitter).
 %%-----------------------------------------------------------------------
-%% Dot grid size
+%% Dot grid size controlled by \GPOpt@dotgridsize
 %% QUESTION: Should we just have 'majorsize' and 'minorsize' and use
 %% that value here?
-\define@key{GP}{dotgridsize}{\def\dotgridsquaresize{#1}}
-
-%% Start with small squares as a default
-\setkeys{GP}{dotgridsize=0.1in}
-%% TODO Move this to an example file
-%% Big squares
-%\setkeys{GP}{dotgridsize=0.2in}
-
-%% Dot size
-\define@key{GP}{dotsize}{\def\dotsize{#1}}
-
-\setkeys{GP}{dotsize=.7pt}
+%% TODO Move to an example file: Big squares 0.2in
 
 \pgfdeclarepatternformonly
   {dotgrid}% name
-  {\pgfpoint{-0.5*\dotgridsquaresize}{-0.5*\dotgridsquaresize}}% lower left
-  {\pgfpoint{0.5*\dotgridsquaresize}{0.5*\dotgridsquaresize}}%  upper right
-  {\pgfpoint{\dotgridsquaresize}{\dotgridsquaresize}}%  tile size
+  {\pgfpoint{-0.5*\GPOpt@dotgridsize}{-0.5*\GPOpt@dotgridsize}}% lower left
+  {\pgfpoint{0.5*\GPOpt@dotgridsize}{0.5*\GPOpt@dotgridsize}}%  upper right
+  {\pgfpoint{\GPOpt@dotgridsize}{\GPOpt@dotgridsize}}%  tile size
   {% shape description
-    \pgfpathcircle{\pgfqpoint{0pt}{0pt}}{\dotsize}
+    \pgfpathcircle{\pgfqpoint{0pt}{0pt}}{\GPOpt@dotsize}
     \pgfusepath{fill}
   }
 
@@ -264,9 +311,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % This inner code will be set by the choicekey pattern=...
-\newcommand{\innerpatterncode}{}
+\newcommand{\GP@innerpatterncode}{}
 % This is the "outer" code to hook into every page
-\newcommand{\patterncode}{% No blank lines in this code!
+\newcommand{\GP@patterncode}{% No blank lines in this code!
 \begin{tikzpicture}[remember picture, overlay]
 %
 %% Change "thin" to "very thin" if the lines are too thick.
@@ -274,7 +321,7 @@
   minorgrid/.style={minorcolor, thin},
   majorgrid/.style={majorcolor, thin},
 }
-\ifKV@GP@fullpage%
+\ifGP@fullpage%
 \coordinate (a) at (current page.south west);
 \coordinate (b) at (current page.north east);
 \else%
@@ -282,7 +329,7 @@
 \coordinate (b) at (current page text area.north east);
 \fi
 %
-\innerpatterncode%
+\GP@innerpatterncode%
 %
 \end{tikzpicture}
 }
@@ -290,7 +337,7 @@
 \AtBeginDocument{\pagecolor{bgcolor}}
 % Actually hook it in!
 \AddEverypageHook{%
-\patterncode%
+\GP@patterncode%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -299,13 +346,13 @@
 
 \define@choicekey*{GP}{pattern}[\val\nr]%
   % Allowed values for pattern:
-  {std,stdeight,majmin,dot,hex,tri,iso,lightcone,ruled,doubleruled}[std]{%
+  {std,stdeight,majmin,dot,hex,tri,iso,lightcone,ruled,doubleruled}{%
   \ifcase\nr\relax
     % std
 %%-----------------------------------------------------------------------
 %% Quadrille, ten squares per inch.
 %%-----------------------------------------------------------------------
-    \renewcommand{\innerpatterncode}{%
+    \renewcommand{\GP@innerpatterncode}{%
 %% Draw a grid with 10 squares per inch.
 \draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.1in] (b);
 %
@@ -317,7 +364,7 @@
 %%-----------------------------------------------------------------------
 %% Quadrille, eight squares per inch.
 %%-----------------------------------------------------------------------
-    \renewcommand{\innerpatterncode}{%
+    \renewcommand{\GP@innerpatterncode}{%
 %% Draw a grid with 10 squares per inch.
 \draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.125in] (b);
 %
@@ -330,7 +377,7 @@
 %% Graph paper, eight squares per inch with a major grid
 %% every half-inch.
 %%-----------------------------------------------------------------------
-    \renewcommand{\innerpatterncode}{%
+    \renewcommand{\GP@innerpatterncode}{%
 % Draw a grid with 10 squares per inch.
 \draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.125in] (b);
 %
@@ -346,7 +393,7 @@
 %% Slightly modified version of code added by Leo
 %% Stein (@duetosymmetry).
 %%-----------------------------------------------------------------------
-    \renewcommand{\innerpatterncode}{%
+    \renewcommand{\GP@innerpatterncode}{%
     \fill [pattern=dotgrid,pattern color=minorcolor] (a) rectangle (b);
     }
   \or
@@ -354,7 +401,7 @@
 %%-----------------------------------------------------------------------
 %% Hex grid
 %%-----------------------------------------------------------------------
-    \renewcommand{\innerpatterncode}{%
+    \renewcommand{\GP@innerpatterncode}{%
     \fill [pattern=hexagons,pattern color=minorcolor] (a) rectangle (b);
     }
   \or
@@ -362,7 +409,7 @@
 %%-----------------------------------------------------------------------
 %% Triangle grid, adjust triangle size in the preamble
 %%-----------------------------------------------------------------------
-    \renewcommand{\innerpatterncode}{%
+    \renewcommand{\GP@innerpatterncode}{%
       \fill [pattern=triangles,pattern color=minorcolor] (a) rectangle (b);
     }
   \or
@@ -370,7 +417,7 @@
 %%-----------------------------------------------------------------------
 %% Isometric grid
 %%-----------------------------------------------------------------------
-    \renewcommand{\innerpatterncode}{%
+    \renewcommand{\GP@innerpatterncode}{%
       \fill [pattern=isometric, pattern color=minorcolor] (a) rectangle (b);
     }
   \or
@@ -378,7 +425,7 @@
 %%-----------------------------------------------------------------------
 %% A grid with light cones.
 %%-----------------------------------------------------------------------
-    \renewcommand{\innerpatterncode}{%
+    \renewcommand{\GP@innerpatterncode}{%
 %% Draw a grid with 4 squares per inch.
 \draw[style=minorgrid, shift={(a)}] (0,0) coordinate grid [step=0.25in] (b);
 %
@@ -390,7 +437,7 @@
 %%-----------------------------------------------------------------------
 %% Ruled page with bold lines every 0.2in or 0.25in
 %%-----------------------------------------------------------------------
-    \renewcommand{\innerpatterncode}{%
+    \renewcommand{\GP@innerpatterncode}{%
 %% Draw a ruled page with lines every 0.2in
 \draw[style=majorgrid, shift={(a)}] (0,0) grid [ystep=0.2in, xstep=\paperwidth] (b);
     }
@@ -400,7 +447,7 @@
 %% Ruled page with bold lines every 0.25in and light lines
 %% every 0.125 in.
 %%-----------------------------------------------------------------------
-    \renewcommand{\innerpatterncode}{%
+    \renewcommand{\GP@innerpatterncode}{%
 %% Draw a ruled pattern with thin lines every 0.125 in and bold lines every 0.25 in.
 \draw[style=minorgrid, shift={(a)}] (0,0) grid [ystep=0.125in, xstep=\paperwidth] (b);
 %
@@ -412,26 +459,8 @@
   \fi
 }
 
-% Do we want the background to be fullpage?
-% Default: yes
-\define@boolkey{GP}{fullpage}{}
-
-\DeclareOptionX{pattern}{\setkeys{GP}{pattern=#1}}
-\DeclareOptionX{colorset}{\setkeys{GP}{colorset=#1}}
-% TODO: Should we just have a majsize and minsize and use for all patterns?
-\DeclareOptionX{hexagonsize}{\setkeys{GP}{hexagonsize=#1}}
-\DeclareOptionX{trianglesize}{\setkeys{GP}{trianglesize=#1}}
-\DeclareOptionX{dotgridsize}{\setkeys{GP}{dotgridsize=#1}}
-\DeclareOptionX{dotsize}{\setkeys{GP}{dotsize=#1}}
-\DeclareOptionX{fullpage}{\setkeys{GP}{fullpage=true}}
-\DeclareOptionX{textarea}{\setkeys{GP}{fullpage=false}}
-\DeclareOptionX{majorcolor}{\colorlet{majorcolor}{#1}}
-\DeclareOptionX{minorcolor}{\colorlet{minorcolor}{#1}}
-\DeclareOptionX{bgcolor}{\colorlet{bgcolor}{#1}}
-\DeclareOptionX*{%
-  \PackageWarning{graphpaper}{Unknown option ‘\CurrentOption’}%
-}
-\ProcessOptionsX*
+% Use the passed package option to set the above key
+\expandafter\@setkeyhelper\expandafter{\GPOpt@pattern}{pattern}
 
 \endinput
 %%
