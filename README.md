@@ -1,3 +1,7 @@
+![Build examples](../../actions/workflows/pdflatex-examples.yml/badge.svg)
+
+[![Latest Zip of PDFs](https://img.shields.io/badge/Latest_Zip_of_PDFs-latest-orange.svg?style=flat)](../gh-action-result/examples/pdfs.zip?raw=true)
+
 # LaTeX-Graph-Paper
 Make your own quadrille, graph, hex, etc. paper! Uses the [PGF/TikZ](https://en.wikipedia.org/wiki/PGF/TikZ) package for LaTeX, which should be part of any modern TeX installation. All colors and spacing are customizable.
 
