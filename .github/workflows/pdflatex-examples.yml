@@ -1,0 +1,45 @@
+name: Build examples
+on:
+  push:
+    branches-ignore:
+      - 'gh-action-result/examples'
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v2
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v2
+        with:
+          working_directory: examples
+          root_file: |
+              dot-grid-10spi.tex
+              dot-grid-5spi.tex
+              engineer-pad.tex
+              engineer-paper-8spi.tex
+              graph-paper-8spi.tex
+              graph-paper.tex
+              grid-with-light-cones.tex
+              hex-grid-large.tex
+              hex-grid-small.tex
+              isometric-grid.tex
+              plum-graph-paper.tex
+              precocious-young-engineer.tex
+              quadrille-10spi.tex
+              quadrille-8spi.tex
+              red-graph.tex
+              triangular-grid.tex
+      - name: Commit to orphan branch
+        run: |
+          git checkout --orphan gh-action-result/examples
+          git rm -rf .
+          zip pdfs.zip examples/*.pdf
+          git add pdfs.zip
+          git -c user.name='GitHub Action' -c user.email='action@github.com' commit -m "Built examples"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-action-result/examples
+          force: true
