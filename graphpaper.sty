@@ -17,9 +17,11 @@
 %% Declare switches for processing the options.
 
 \newif\ifGP@geometrypreviouslyloaded
+\newif\ifGP@fullnessset
 \newif\ifGP@fullpage
 \newif\ifGP@textarea
 \GP@geometrypreviouslyloadedfalse
+\GP@fullnesssetfalse
 \GP@fullpagefalse
 \GP@textareafalse
 
@@ -55,7 +57,12 @@
   \ifGP@textarea
     \PackageError{graphpaper}{%
       Can not specify both fullpage and textarea, please remove one option}{}
-  \fi
+    \fi
+  \GP@fullnesssettrue
+\fi
+
+\ifGP@textarea
+  \GP@fullnesssettrue
 \fi
 
 % We keep track of this to know whether or not we would be overriding
@@ -344,6 +351,21 @@
 %% Begin pattern definition code
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\define@boolkey{GP}{patterndefaultfullness}{}
+\newcommand{\GP@patterndefaultgeometry}{}
+
+%% Pattern-definer-helper
+%% The interface is:
+%% \GP@setpattern
+%%   {<true for default fullpage, false for default textarea>}
+%%   {<default geometry config>}
+%%   {<contents of inner pattern code>}
+\newcommand{\GP@setpattern}[3]{%
+\setkeys{GP}{patterndefaultfullness=#1}
+\renewcommand{\GP@patterndefaultgeometry}{#2}
+\renewcommand{\GP@innerpatterncode}{#3}
+}
+
 \define@choicekey*{GP}{pattern}[\val\nr]%
   % Allowed values for pattern:
   {std,stdeight,majmin,dot,hex,tri,iso,lightcone,ruled,doubleruled}{%
@@ -351,8 +373,8 @@
     % std
 %%-----------------------------------------------------------------------
 %% Quadrille, ten squares per inch.
-%%-----------------------------------------------------------------------
-    \renewcommand{\GP@innerpatterncode}{%
+%% -----------------------------------------------------------------------
+    \GP@setpattern{false}{letterpaper, margin=0.2in}{%
 %% Draw a grid with 10 squares per inch.
 \draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.1in] (b);
 %
@@ -364,7 +386,7 @@
 %%-----------------------------------------------------------------------
 %% Quadrille, eight squares per inch.
 %%-----------------------------------------------------------------------
-    \renewcommand{\GP@innerpatterncode}{%
+    \GP@setpattern{false}{letterpaper, margin=0.1875in}{%
 %% Draw a grid with 10 squares per inch.
 \draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.125in] (b);
 %
@@ -377,7 +399,7 @@
 %% Graph paper, eight squares per inch with a major grid
 %% every half-inch.
 %%-----------------------------------------------------------------------
-    \renewcommand{\GP@innerpatterncode}{%
+    \GP@setpattern{false}{letterpaper, margin=0.25in}{%
 % Draw a grid with 10 squares per inch.
 \draw[style=minorgrid, shift={(a)}] (0,0) grid [step=0.125in] (b);
 %
@@ -393,7 +415,7 @@
 %% Slightly modified version of code added by Leo
 %% Stein (@duetosymmetry).
 %%-----------------------------------------------------------------------
-    \renewcommand{\GP@innerpatterncode}{%
+    \GP@setpattern{true}{}{%
     \fill [pattern=dotgrid,pattern color=minorcolor] (a) rectangle (b);
     }
   \or
@@ -401,7 +423,7 @@
 %%-----------------------------------------------------------------------
 %% Hex grid
 %%-----------------------------------------------------------------------
-    \renewcommand{\GP@innerpatterncode}{%
+    \GP@setpattern{true}{}{%
     \fill [pattern=hexagons,pattern color=minorcolor] (a) rectangle (b);
     }
   \or
@@ -409,7 +431,7 @@
 %%-----------------------------------------------------------------------
 %% Triangle grid, adjust triangle size in the preamble
 %%-----------------------------------------------------------------------
-    \renewcommand{\GP@innerpatterncode}{%
+    \GP@setpattern{true}{}{%
       \fill [pattern=triangles,pattern color=minorcolor] (a) rectangle (b);
     }
   \or
@@ -417,7 +439,7 @@
 %%-----------------------------------------------------------------------
 %% Isometric grid
 %%-----------------------------------------------------------------------
-    \renewcommand{\GP@innerpatterncode}{%
+    \GP@setpattern{true}{}{%
       \fill [pattern=isometric, pattern color=minorcolor] (a) rectangle (b);
     }
   \or
@@ -425,7 +447,7 @@
 %%-----------------------------------------------------------------------
 %% A grid with light cones.
 %%-----------------------------------------------------------------------
-    \renewcommand{\GP@innerpatterncode}{%
+    \GP@setpattern{false}{letterpaper, margin=.125in}{%
 %% Draw a grid with 4 squares per inch.
 \draw[style=minorgrid, shift={(a)}] (0,0) coordinate grid [step=0.25in] (b);
 %
@@ -435,9 +457,9 @@
   \or
     % ruled
 %%-----------------------------------------------------------------------
-%% Ruled page with bold lines every 0.2in or 0.25in
+%% Ruled page with bold lines every 0.2in or 0.25in TODO make ystep an option
 %%-----------------------------------------------------------------------
-    \renewcommand{\GP@innerpatterncode}{%
+    \GP@setpattern{false}{letterpaper, body={8in,10.8in}}{%
 %% Draw a ruled page with lines every 0.2in
 \draw[style=majorgrid, shift={(a)}] (0,0) grid [ystep=0.2in, xstep=\paperwidth] (b);
     }
@@ -447,7 +469,7 @@
 %% Ruled page with bold lines every 0.25in and light lines
 %% every 0.125 in.
 %%-----------------------------------------------------------------------
-    \renewcommand{\GP@innerpatterncode}{%
+    \GP@setpattern{false}{letterpaper, margin=.25in}{%
 %% Draw a ruled pattern with thin lines every 0.125 in and bold lines every 0.25 in.
 \draw[style=minorgrid, shift={(a)}] (0,0) grid [ystep=0.125in, xstep=\paperwidth] (b);
 %
@@ -461,6 +483,36 @@
 
 % Use the passed package option to set the above key
 \expandafter\@setkeyhelper\expandafter{\GPOpt@pattern}{pattern}
+
+% Determine whether or not to (re)set fullpage vs textarea
+\ifGP@fullnessset
+% Respect their choice
+\PackageWarning{graphpaper}{fullpage or textarea has already been set}
+\else
+  % Reset the value of \GP@fullpage based on the pattern's default
+  \PackageWarning{graphpaper}{Going to set pattern's default fullness}
+  % There's probably a more idiomatic way to do this but I can't
+  % figure it out
+  \ifKV@GP@patterndefaultfullness
+    \PackageWarning{graphpaper}{Setting default fullpage}
+    \GP@fullpagetrue
+  \else
+    \PackageWarning{graphpaper}{Setting default textarea}
+    \GP@fullpagefalse
+  \fi
+\fi
+
+% Determine whether or not to fiddle with the page geometry
+\ifGP@geometrypreviouslyloaded
+% Respect their previous choice
+\PackageWarning{graphpaper}{'geometry' package was previously loaded, will not use pattern defaults.}
+\else
+  \PackageWarning{graphpaper}{setting pattern default geometry}
+  % Use the pattern's defaults,
+  \expandafter\geometry\expandafter{\GP@patterndefaultgeometry}
+  % And then override with any more specific settings passed by the user
+  \expandafter\geometry\expandafter{\GPOpt@geometry}
+\fi
 
 \endinput
 %%
