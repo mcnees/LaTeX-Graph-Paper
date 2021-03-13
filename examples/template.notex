@@ -1,8 +1,6 @@
 \documentclass{article}
 
-\usepackage[%PAPERSIZE%]{geometry}
-
-\usepackage[pattern=%PATTERN%, colorset=%COLORSET%, %AREA%]{graphpaper}
+\usepackage[pattern=%PATTERN%, colorset=%COLORSET%, %AREA%, geometry={%PAPERSIZE%}]{graphpaper}
 
 \begin{document}
 \thispagestyle{empty}
