@@ -8,9 +8,10 @@ for pat in `grep -A1 "Allowed values for pattern" graphpaper.sty | tail -n1 | cu
                     -e "s/%COLORSET%/${col}/" \
                     -e "s/%PAPERSIZE%/${paper}/" \
                     -e "s/%AREA%/${area}/" \
-                    template.notex > ${pat}-${col}-${paper}-${area}.tex
+                    template-complex.notex > ${pat}-${col}-${paper}-${area}.tex
             done
         done
     done
+    sed -e "s/%PATTERN%/${pat}/" \
+        template-default.notex > ${pat}-default.tex
 done
-
