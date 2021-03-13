@@ -38,7 +38,7 @@
 \DeclareStringOption{bgcolor}
 
 \DeclareStringOption[0.1666in]{hexagonsize}
-\DeclareStringOption[2*0.125in]{trianglesize}
+\DeclareStringOption[0.25in]{trianglesize}
 \DeclareStringOption[0.1in]{dotgridsize}
 \DeclareStringOption[.7pt]{dotsize}
 
@@ -48,9 +48,6 @@
 \DeclareStringOption{geometry}
 
 \ProcessKeyvalOptions*
-
-\typeout{HELLO Got \GPOpt@pattern}
-\typeout{HELLO Got \GPOpt@colorset}
 
 % Can only have one of fullpage or textarea
 \ifGP@fullpage
