@@ -487,17 +487,13 @@
 % Determine whether or not to (re)set fullpage vs textarea
 \ifGP@fullnessset
 % Respect their choice
-\PackageWarning{graphpaper}{fullpage or textarea has already been set}
 \else
   % Reset the value of \GP@fullpage based on the pattern's default
-  \PackageWarning{graphpaper}{Going to set pattern's default fullness}
   % There's probably a more idiomatic way to do this but I can't
   % figure it out
   \ifKV@GP@patterndefaultfullness
-    \PackageWarning{graphpaper}{Setting default fullpage}
     \GP@fullpagetrue
   \else
-    \PackageWarning{graphpaper}{Setting default textarea}
     \GP@fullpagefalse
   \fi
 \fi
@@ -507,7 +503,6 @@
 % Respect their previous choice
 \PackageWarning{graphpaper}{'geometry' package was previously loaded, will not use pattern defaults.}
 \else
-  \PackageWarning{graphpaper}{setting pattern default geometry}
   % Use the pattern's defaults,
   \expandafter\geometry\expandafter{\GP@patterndefaultgeometry}
   % And then override with any more specific settings passed by the user
