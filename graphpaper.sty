@@ -21,8 +21,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{graphpaper}
-    [2021/03/13 v1.0.0 Graph paper backgrounds]
-%% TODO: Fix metadata above
+    [2021/03/14 v1.0.0 Graph paper backgrounds]
 
 \RequirePackage{xkeyval}
 \RequirePackage{kvoptions}
@@ -30,7 +29,15 @@
 \RequirePackage{tikz}
 \usetikzlibrary{patterns.meta,calc}
 \RequirePackage{tikzpagenodes}
-\RequirePackage{everypage}
+%% everypage has been superseded -- try to use the new builtin
+%% approach, but fall back to everypage-1x if needed
+%% This code is roughly taken from the new everypage code
+\@ifundefined{AddToHook}{%
+  \RequirePackage{everypage-1x}
+}{%
+  \newcommand*{\AddEverypageHook}[1]{%
+  \AddToHook{shipout/background}{\put(1in,-1in){#1}}}
+}
 \RequirePackage{pagecolor}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
