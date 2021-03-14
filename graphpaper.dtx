@@ -26,14 +26,26 @@
 %
 %<*driver>
 \documentclass{ltxdoc}
-\usepackage[pattern=majmin, geometry={margin=1.5in}]{graphpaper}[2021/03/13]
+\usepackage[dvipsnames]{xcolor}
+\usepackage[pattern=stdeight, textarea,
+  majorcolor=cornflower!30, minorcolor=cornflower!10,
+  geometry={margin=1in, left=2in}]{graphpaper}[2021/03/13]
+\usepackage{hyperref}
+\hypersetup{colorlinks,urlcolor=NavyBlue,citecolor=NavyBlue,linkcolor=NavyBlue,
+  pdfauthor={Robert McNees and Leo C. Stein},
+  pdftitle={The graphpaper package}}
+\usepackage{fontawesome}
+\definecolor{twitterblue}{RGB}{64,153,255}
+\newcommand{\email}[1]{$\langle$\href{mailto:#1}{#1}$\rangle$}
+\newcommand{\twitter}[1]{\href{https://twitter.com/#1}{\textcolor{twitterblue}{\faTwitter}\,\tt\textcolor{twitterblue}{@#1}}}
+\usepackage{dtxdescribe}
+\usepackage[columns=2]{idxlayout}
 \EnableCrossrefs
 \CodelineIndex
 \RecordChanges
 \begin{document}
   \DocInput{graphpaper.dtx}
   \PrintChanges
-  \PrintIndex
 \end{document}
 %</driver>
 % \fi
@@ -61,10 +73,11 @@
 %
 % \DoNotIndex{\newcommand,\newenvironment}
 %
-% \providecommand*{\url}{\texttt}
 % \GetFileInfo{graphpaper.sty}
 % \title{The \textsf{graphpaper} package}
-% \author{Robert McNees, Leo C. Stein \\ \url{rmcnees@luc.edu}, \url{leo.stein@gmail.com}}
+% \author{Robert McNees\footnote{\email{rmcnees@luc.edu}; \twitter{mcnees}}
+%   \ and
+%   Leo C.\ Stein\footnote{\email{leo.stein@gmail.com}; \twitter{duetosymmetry}}}
 % \date{\fileversion~from \filedate}
 %
 % \maketitle
@@ -74,12 +87,118 @@
 %
 % \section{Introduction}
 %
-% Put text here.
+% Make your own quadrille, graph, hex, etc.\ paper! Uses the PGF/TikZ
+% package for \LaTeX, which should be part of any modern \TeX{}
+% installation. All colors and spacing are customizable.
+% TODO Continue
 %
 % \section{Usage}
 %
-% Put text here.
+% \subsection{Options}
 %
+% Your graph paper is configured through a number of key/value options
+% to the |\usepackage| command.  Let's go through these options.
+%
+% \DescribeObject{pattern=\marg{name}}\DescribeDefault{std} Which of
+% the predefined patterns to use for the page or textarea background.
+% The current list of pattern names is: |std|, |stdeight|, |majmin|,
+% |dot|, |hex|, |tri|, |iso|, |lightcone|, |ruled|, |doubleruled|. We
+% describe each of these patterns in Sec.~\ref{sec:patterns}.
+% Patterns come with default page geometry (size and margins; see
+% |geometry|), and default `fullness' (whether they fill the page or
+% not; see options |fullpage| and |textarea|).
+%
+% \DescribeObject{colorset=\marg{name}}\DescribeDefault{std} Color
+% presets.  Valid color preset names are: |std|, |precocious|,
+% |brickred|, |engineer|, |plumpad|. A preset determines the
+% |majorcolor|, |minorcolor|, and |bgcolor| all at once. But, you can
+% start from a preset and then override some colors.
+%
+% \DescribeObject{majorcolor=\marg{color}} Override the preset
+% ``major'' color. This can be a named color, or using the syntax from
+% |xcolor| to mix colors together.
+%
+% \DescribeObject{minorcolor=\marg{color}} Override the preset
+% ``minor'' color. As above.
+%
+% \DescribeObject{bgcolor=\marg{color}} Override the preset background
+% color. As above.
+%
+% \DescribeObject{hexagonsize=\marg{length}}\DescribeDefault{0.1666in}
+% Controls the size of hexagons for |pattern=hex|.
+%
+% \DescribeObject{trianglesize=\marg{length}}\DescribeDefault{0.25in}
+% Controls the size of triangles for |pattern=tri| or
+% |pattern=iso|.
+%
+% \DescribeObject{dotgridsize=\marg{length}}\DescribeDefault{0.1in}
+% Controls the spacing of dots for |pattern=dot|.
+%
+% \DescribeObject{dotsize=\marg{length}}\DescribeDefault{.7pt}
+% Controls the size of the dots themselves for |pattern=dot|.
+%
+% \DescribeObject{fullpage} Make the pattern fill the whole page.
+%
+% \DescribeObject{textarea} Make the pattern fill only the text area
+% of the document. At most one of the |fullpage| or |textarea| can be
+% specified. If one is specified, it will override the default
+% `fullness' setting of the pattern.
+%
+% \DescribeObject{geometry=\marg{geometry spec}} Page geometry
+% specification, using the syntax of the |geometry| package. This
+% specification will override the pattern's default page geometry.
+% However, if the |geometry| package was loaded before |graphpaper|,
+% this option will be ignored.
+%
+% \subsection{Patterns}
+% \label{sec:patterns}
+%
+% The current set of patterns:
+%
+% \DescribeObject{std} Quadrille, ten squares per inch.
+%
+% \DescribeObject{stdeight} Quadrille, eight squares per inch.
+%
+% \DescribeObject{majmin} Graph paper, eight squares per inch with a
+% major grid every half-inch.
+%
+% \DescribeObject{dot} Grid of dots.  The dot spacing is set by
+% |dotgridsize|, and the size of an individual dot is set by
+% |dotsize|.
+%
+% \DescribeObject{hex} Grid of hexagons.  The hexagon size is set by
+% |hexagonsize|.
+%
+% \DescribeObject{tri} Triangle grid.  The triangle size is set by
+% |trianglesize|.
+%
+% \DescribeObject{iso} Isometric grid.  The triangle size is set by
+% |trianglesize|.
+%
+% \DescribeObject{lightcone} A grid with light cones (45° lines) on a
+% square grid.
+%
+% \DescribeObject{ruled} Ruled page with bold lines every 0.2in or
+% 0.25in.
+%
+% \DescribeObject{doubleruled} Ruled page with bold lines every 0.25in
+% and light lines every 0.125 in.
+%
+% \section{Examples}
+%
+% Let's say you want to use the |tri| pattern, which by default fills
+% the page. But you want it to fill just the textarea of an A4 page
+% with 2cm margins, and you want the triangles to be .75cm
+% long. Finally, you like the colors of the engineer set, but want a
+% white background. Then you would write:
+% \begin{sourceverb}
+%   \usepackage[pattern=tri,
+%     trianglesize=0.75cm,
+%     textarea,
+%     colorset=engineer,
+%     bgcolor=white,
+%     geometry={a4paper, margin=2cm}]{graphpaper}
+% \end{sourceverb}
 %
 
 %
