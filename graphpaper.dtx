@@ -82,29 +82,24 @@
 %
 % \maketitle
 %
-% \noindent Source repo:
+% All development happens at the repo:
 % \url{https://github.com/mcnees/LaTeX-Graph-Paper}.
-%
-% \tableofcontents
 %
 % \section{Introduction}
 %
 % Make your own quadrille, graph, hex, etc.\ paper! Uses the PGF/TikZ
 % package for \LaTeX, which should be part of any modern \TeX{}
-% installation. All colors and spacing are customizable.
+% installation. Lots of preset defaults to get started with ease, yet
+% all colors and spacing are customizable.
 %
-% There are more example .tex files in the |examples| directory to
+% There are example .tex files in the |examples| directory to
 % help get you started with customization. Each tex file has an
 % almost-empty body, with a |\usepackage| statement that you can
 % customize. For example, engineer-pad.tex looks like this:
-% \begin{sourceverb}
-% \documentclass{article}
-% \usepackage[pattern=majmin, colorset=engineer]{graphpaper}
-% \begin{document}
-% \thispagestyle{empty}
-% ~
-% \end{document}
-% \end{sourceverb}
+% \VerbatimInput[frame=single,
+%   numbers=left,
+%   xleftmargin=2em,
+%   label=engineer-pad.tex]{examples/engineer-pad.tex}
 % (The |~| in the body forces a non-empty body, or else latex wouldn't generate a PDF).
 %
 % \section{Usage}
@@ -201,12 +196,14 @@
 %
 % \section{Examples}
 %
+% \subsection{Plenty of customization}
+%
 % Let's say you want to use the |tri| pattern, which by default fills
 % the page. But you want it to fill just the textarea of an A4 page
 % with 2cm margins, and you want the triangles to be .75cm
 % long. Finally, you like the colors of the engineer set, but want a
 % white background. Then you would write:
-% \begin{sourceverb}
+% \begin{sourceverb}[frame=single]
 % \usepackage[pattern=tri,
 %   trianglesize=0.75cm,
 %   textarea,
@@ -214,6 +211,15 @@
 %   bgcolor=white,
 %   geometry={a4paper, margin=2cm}]{graphpaper}
 % \end{sourceverb}
+%
+% \subsection{Custom colors}
+%
+% Using named or blended custom colors is demonstrated in the example
+% file |custom-colors.tex|:
+% \VerbatimInput[frame=single,
+%   numbers=left,
+%   xleftmargin=2em,
+%   label=custom-colors.tex]{examples/custom-colors.tex}
 %
 
 %
