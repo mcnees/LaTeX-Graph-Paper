@@ -89,3 +89,14 @@ Some example styles:
 ![Precocious Engineer](/../screenshots/rosie.png "Precocious Engineer color scheme")
 
 ![Hex Engineer](/../screenshots/hexengineer.png "Hex grid with Engineering Pad color scheme")
+
+Credits
+-------
+
+This package was created by [Robert McNees](http://jacobi.luc.edu/)
+with additional contributions from [Leo
+C. Stein](http://duetosymmetry.com/), and is maintained by both.  This
+material is subject to the [LaTeX Project Public License
+1.3c](https://www.ctan.org/license/lppl1.3), (c) 2017-2021.  The
+hexagon pattern code is [due to Philippe
+Goutet](https://tex.stackexchange.com/questions/6019/drawing-hexagons/6128#6128).
