@@ -17,7 +17,7 @@ that you can customize.  For example,
 [engineer-pad.tex](./examples/engineer-pad.tex) looks like this:
 ```latex
 \documentclass{article}
-\usepackage[pattern=majmin, colorset=engineer]{graphpaper}
+\usepackage[pattern=majmin, colorset=engineer]{gridpapers}
 \begin{document}
 \thispagestyle{empty}
 ~
@@ -57,7 +57,7 @@ once.  But, you can start from a preset and then override some colors.
   'fullness' setting of the pattern.
 * `geometry={<geometry spec>}`: Page geometry specification, using the
   syntax of the geometry package.  If the geometry package was loaded
-  before graphpaper, this option will be ignored.  This specification
+  before gridpapers, this option will be ignored.  This specification
   will override the pattern's default page geometry.
 
 For example, let's say you want to use the `tri` pattern, which by
@@ -71,7 +71,7 @@ background.  Then you would write:
   textarea,
   colorset=engineer,
   bgcolor=white,
-  geometry={a4paper, margin=2cm}]{graphpaper}
+  geometry={a4paper, margin=2cm}]{gridpapers}
 ```
 
 Some example styles:
