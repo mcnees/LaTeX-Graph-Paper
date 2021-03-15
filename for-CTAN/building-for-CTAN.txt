@@ -1,0 +1,24 @@
+I first converted the original .sty to a .dtx using sty2dtx, as
+documented in the run_sty2dtx.sh shell script. That ran:
+
+sty2dtx --author="Robert McNees, Leo C. Stein" \
+        --email="rmcnees@luc.edu, leo.stein@gmail.com" \
+        --year=2021 --date="2021/03/13" \
+        --version=v1.0.0 \
+        --description="Graph paper backgrounds" \
+        -O -I gridpapers.sty gridpapers.dtx
+
+I then massaged some stuff in the generated .dtx and .ins files,
+because they had some stuff I didn't want.
+
+To generate the .sty from the .dtx, we run:
+  pdflatex gridpapers.ins
+
+To generate the documentation from the .dtx, we run:
+  pdflatex gridpapers.dtx
+  makeindex -s gglo.ist -o gridpapers.gls gridpapers.glo   (to make the glossary, i.e. the changelog)
+  makeindex -s gind.ist -o gridpapers.ind gridpapers.idx   (to make the index of commands BUT WE DON'T)
+  pdflatex gridpapers.dtx
+  pdflatex gridpapers.dtx
+
+TODO: What goes into the .tar.gz to upload to CTAN?
