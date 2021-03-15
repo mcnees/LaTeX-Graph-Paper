@@ -45,12 +45,9 @@ once.  But, you can start from a preset and then override some colors.
   together.
 * `minorcolor=<color>`: Override the preset "minor" color.  As above.
 * `bgcolor=<color>`: Override the preset background color.  As above.
-* `hexagonsize=<length>`: Controls the size of hexagons for
-  `pattern=hex`.  Default: `0.1666in`
-* `trianglesize=<length>`: Controls the size of triangles for
-  `pattern=tri` or `pattern=iso`.  Default: `0.25in`
-* `dotgridsize=<length>`: Controls the spacing of dots for
-  `pattern=dot`.  Default: `0.1in`
+* `patternsize=<length>`: Override the preset pattern size.  The
+  meaning of this length argument is different for each pattern; see
+  PDF documentation for full details..
 * `dotsize=<length>`: Controls the size of the dots themselves for
   `pattern=dot`.  Default: `.7pt`
 * `fullpage`: Make the pattern fill the whole page.
@@ -70,7 +67,7 @@ Finally, you like the colors of the `engineer` set, but want a white
 background.  Then you would write:
 ```latex
 \usepackage[pattern=tri,
-  trianglesize=0.75cm,
+  patternsize=0.75cm,
   textarea,
   colorset=engineer,
   bgcolor=white,
