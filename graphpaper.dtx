@@ -50,7 +50,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{393}
+% \CheckSum{430}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -134,15 +134,9 @@
 % \DescribeObject{bgcolor=\marg{color}} Override the preset background
 % color. As above.
 %
-% \DescribeObject{hexagonsize=\marg{length}}\DescribeDefault{0.1666in}
-% Controls the size of hexagons for |pattern=hex|.
-%
-% \DescribeObject{trianglesize=\marg{length}}\DescribeDefault{0.25in}
-% Controls the size of triangles for |pattern=tri| or
-% |pattern=iso|.
-%
-% \DescribeObject{dotgridsize=\marg{length}}\DescribeDefault{0.1in}
-% Controls the spacing of dots for |pattern=dot|.
+% \DescribeObject{patternsize=\marg{length}} Override the preset
+% pattern size.  The meaning of this length argument is different for
+% each pattern; see Sec.~\ref{sec:patterns} for more.
 %
 % \DescribeObject{dotsize=\marg{length}}\DescribeDefault{.7pt}
 % Controls the size of the dots themselves for |pattern=dot|.
@@ -165,34 +159,48 @@
 %
 % The current set of patterns:
 %
-% \DescribeObject{std} Quadrille, ten squares per inch.
+% \DescribeObject{std} Quadrille, ten squares per inch.  The
+% |patternsize| option controls the side of a square.  Default is
+% |patternsize=0.1in|.
 %
-% \DescribeObject{stdeight} Quadrille, eight squares per inch.
+% \DescribeObject{stdeight} Quadrille, eight squares per inch.  The
+% |patternsize| option controls the side of a square.  Default is
+% |patternsize=0.125in|.
 %
 % \DescribeObject{majmin} Graph paper, eight squares per inch with a
-% major grid every half-inch.
+% major grid every half-inch.  The |patternsize| option controls the
+% side of a small square (the larger squares are four times bigger).
+% Default is |patternsize=0.125in|.
 %
-% \DescribeObject{dot} Grid of dots.  The dot spacing is set by
-% |dotgridsize|, and the size of an individual dot is set by
-% |dotsize|.
+% \DescribeObject{dot} Grid of dots.  The size of an individual dot is
+% set by |dotsize|.  The |patternsize| option controls the distance
+% between dots.  Default is |patternsize=0.1in|.
 %
-% \DescribeObject{hex} Grid of hexagons.  The hexagon size is set by
-% |hexagonsize|.
+% \DescribeObject{hex} Grid of hexagons.  The |patternsize| option
+% controls the side length of a hexagon.  Default is
+% |patternsize=0.1666in|.
 %
-% \DescribeObject{tri} Triangle grid.  The triangle size is set by
-% |trianglesize|.
+% \DescribeObject{tri} Triangle grid.  The |patternsize| option
+% controls the side length of a triangle.  Default is
+% |patternsize=0.25in|.
 %
-% \DescribeObject{iso} Isometric grid.  The triangle size is set by
-% |trianglesize|.
+% \DescribeObject{iso} Isometric grid.  The |patternsize| option
+% controls the side length of a triangle.  Default is
+% |patternsize=0.25in|.
 %
 % \DescribeObject{lightcone} A grid with light cones (45° lines) on a
-% square grid.
+% square grid.  The |patternsize| option controls the side of a
+% horizontal square (not the tipped squared).  Default is
+% |patternsize=0.25in|.
 %
-% \DescribeObject{ruled} Ruled page with bold lines every 0.2in or
-% 0.25in.
+% \DescribeObject{ruled} Ruled page with bold lines.  The
+% |patternsize| option controls the vertical distance between lines.
+% Default is |patternsize=0.2in|.
 %
-% \DescribeObject{doubleruled} Ruled page with bold lines every 0.25in
-% and light lines every 0.125 in.
+% \DescribeObject{doubleruled} Ruled page with bold lines alternating
+% with light lines.  The |patternsize| option controls the vertical
+% distance between neighboring lines.  Default is
+% |patternsize=0.125in|.
 %
 % \section{Examples}
 %
@@ -205,7 +213,7 @@
 % white background. Then you would write:
 % \begin{sourceverb}[frame=single]
 % \usepackage[pattern=tri,
-%   trianglesize=0.75cm,
+%   patternsize=0.75cm,
 %   textarea,
 %   colorset=engineer,
 %   bgcolor=white,
