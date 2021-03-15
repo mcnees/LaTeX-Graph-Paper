@@ -1,19 +1,11 @@
-![Build examples](../../actions/workflows/pdflatex-examples.yml/badge.svg)
-[![Latest Zip of PDFs](https://img.shields.io/badge/Zip_of_PDFs-latest-orange.svg?style=flat)](../gh-action-result/examples/pdfs.zip?raw=true)
-
-# Graph papers in LaTeX: the *gridpapers* package
+# The *gridpapers* package
 Make your own quadrille, graph, hex, etc. paper! Uses the [PGF/TikZ](https://en.wikipedia.org/wiki/PGF/TikZ) package for LaTeX, which should be part of any modern TeX installation. All colors and spacing are customizable.
 
-Once you clone or download the repo, simply run latex twice on the
-file "graph paper.tex" to produce a pdf. From the command line, type:
-
-    pdflatex "graph paper.tex"
-
-There are more example .tex files in the [examples
-directory](./examples/) to help get you started with customization.
+There are .tex files in the examples/
+directory to help get you started with customization.
 Each tex file has an almost-empty body, with a `\usepackage` statement
 that you can customize.  For example,
-[engineer-pad.tex](./examples/engineer-pad.tex) looks like this:
+examples/engineer-pad.tex looks like this:
 ```latex
 \documentclass{article}
 \usepackage[pattern=majmin, colorset=engineer]{gridpapers}
@@ -27,6 +19,17 @@ generate a PDF).
 
 Note: This package is distinct from a different package with a similar
 name, [graphpaper (on CTAN)](https://www.ctan.org/pkg/graphpaper).
+
+Installation
+------------
+If `gridpapers` is already provided in your TeX distribution, skip
+this section. You should be able to install `gridpapers` [from the
+CTAN](https://www.ctan.org/pkg/gridpapers) via your distribution's
+utility (e.g. the TeX Live Utility). Alternatively, you can get the
+package from the [source repository on
+GitHub](https://github.com/mcnees/LaTeX-Graph-Paper). If you do not
+want to do a "full" installation, just copy gridpapers.sty into the
+same directory as your LaTeX source.
 
 Usage
 -----
@@ -84,19 +87,19 @@ Gallery
 
 Some example styles:
 
-![Standard](/../screenshots/std.jpg "Standard")
+![Standard](https://raw.githubusercontent.com/mcnees/LaTeX-Graph-Paper/screenshots/std.jpg "Standard")
 
-![Quad](/../screenshots/quad.jpg "Quadrille")
+![Quad](https://raw.githubusercontent.com/mcnees/LaTeX-Graph-Paper/screenshots/quad.jpg "Quadrille")
 
-![Hex](/../screenshots/hex.jpg "Hex")
+![Hex](https://raw.githubusercontent.com/mcnees/LaTeX-Graph-Paper/screenshots/hex.jpg "Hex")
 
-![Dots](/../screenshots/dot.jpg "Dots")
+![Dots](https://raw.githubusercontent.com/mcnees/LaTeX-Graph-Paper/screenshots/dot.jpg "Dots")
 
-![Light cone](/../screenshots/lightcone.jpg "Light cone")
+![Light cone](https://raw.githubusercontent.com/mcnees/LaTeX-Graph-Paper/screenshots/lightcone.jpg "Light cone")
 
-![Precocious Engineer](/../screenshots/rosie.png "Precocious Engineer color scheme")
+![Precocious Engineer](https://raw.githubusercontent.com/mcnees/LaTeX-Graph-Paper/screenshots/rosie.png "Precocious Engineer color scheme")
 
-![Hex Engineer](/../screenshots/hexengineer.png "Hex grid with Engineering Pad color scheme")
+![Hex Engineer](https://raw.githubusercontent.com/mcnees/LaTeX-Graph-Paper/screenshots/hexengineer.png "Hex grid with Engineering Pad color scheme")
 
 Credits
 -------

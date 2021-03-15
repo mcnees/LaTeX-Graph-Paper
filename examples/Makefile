@@ -6,7 +6,9 @@ SOURCESDEFAULT = $(wildcard *-default.tex)
 PDFS = $(SOURCES:.tex=.pdf)
 PDFSDEFAULT = $(SOURCESDEFAULT:.tex=.pdf)
 
-.PHONY: warn all tex-examples default
+JPGS = $(SOURCES:.tex=.jpg)
+
+.PHONY: warn all tex-examples default jpegs
 
 warn:
 	@echo "My default action is just to emit this message."
@@ -25,6 +27,11 @@ tex-examples:
 %.pdf: %.tex
 	$(LATEX) $<
 	$(LATEX) $<
+
+jpegs: $(JPGS)
+
+%.jpg: %.pdf
+	convert -density 144 $< -quality 90 -crop 320x320-32-32\! -background gray -flatten $@
 
 .PHONY: clean reallyclean
 

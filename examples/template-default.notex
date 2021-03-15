@@ -1,6 +1,6 @@
 \documentclass{article}
 
-\usepackage[pattern=%PATTERN%]{graphpaper}
+\usepackage[pattern=%PATTERN%]{gridpapers}
 
 \begin{document}
 \thispagestyle{empty}

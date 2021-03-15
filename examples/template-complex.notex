@@ -1,6 +1,6 @@
 \documentclass{article}
 
-\usepackage[pattern=%PATTERN%, colorset=%COLORSET%, %AREA%, geometry={%PAPERSIZE%}]{graphpaper}
+\usepackage[pattern=%PATTERN%, colorset=%COLORSET%, %AREA%, geometry={%PAPERSIZE%}]{gridpapers}
 
 \begin{document}
 \thispagestyle{empty}
