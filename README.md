@@ -1,8 +1,7 @@
 ![Build examples](../../actions/workflows/pdflatex-examples.yml/badge.svg)
+[![Latest Zip of PDFs](https://img.shields.io/badge/Zip_of_PDFs-latest-orange.svg?style=flat)](../gh-action-result/examples/pdfs.zip?raw=true)
 
-[![Latest Zip of PDFs](https://img.shields.io/badge/Latest_Zip_of_PDFs-latest-orange.svg?style=flat)](../gh-action-result/examples/pdfs.zip?raw=true)
-
-# LaTeX-Graph-Paper
+# Graph papers in LaTeX: the *gridpapers* package
 Make your own quadrille, graph, hex, etc. paper! Uses the [PGF/TikZ](https://en.wikipedia.org/wiki/PGF/TikZ) package for LaTeX, which should be part of any modern TeX installation. All colors and spacing are customizable.
 
 Once you clone or download the repo, simply run latex twice on the
@@ -25,6 +24,12 @@ that you can customize.  For example,
 ```
 (The `~` in the body forces a non-empty body, or else latex wouldn't
 generate a PDF).
+
+Note: This package is distinct from a different package with a similar
+name, [graphpaper (on CTAN)](https://www.ctan.org/pkg/graphpaper).
+
+Usage
+-----
 
 All the configuration happens via the `\usepackage` command.  The
 current valid options are:
@@ -73,6 +78,9 @@ background.  Then you would write:
   bgcolor=white,
   geometry={a4paper, margin=2cm}]{gridpapers}
 ```
+
+Gallery
+-------
 
 Some example styles:
 
