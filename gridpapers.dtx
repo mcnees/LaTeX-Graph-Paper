@@ -50,7 +50,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{430}
+% \CheckSum{432}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -70,6 +70,8 @@
 %
 %
 % \changes{v1.0.0}{2021/03/13}{Converted to DTX file}
+% \changes{v1.0.1}{2021/03/19}{Hotfix: old installs don't have
+% everypage-1x, use everypage}
 %
 % \DoNotIndex{\newcommand,\newenvironment}
 %
@@ -242,7 +244,7 @@
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{gridpapers}
-    [2021/03/14 v1.0.0 Graph paper backgrounds]
+    [2021/03/19 v1.0.1 Graph paper backgrounds]
 
 \RequirePackage{xkeyval}
 \RequirePackage{kvoptions}
@@ -254,7 +256,10 @@
 %% approach, but fall back to everypage-1x if needed
 %% This code is roughly taken from the new everypage code
 \@ifundefined{AddToHook}{%
-  \RequirePackage{everypage-1x}
+  \IfFileExists{everypage-1x.sty}{%
+    %% If everypage is new enough to complain, avoid the complaints
+    \RequirePackage{everypage-1x}
+  }{\RequirePackage{everypage}}
 }{%
   \newcommand*{\AddEverypageHook}[1]{%
   \AddToHook{shipout/background}{\put(1in,-1in){#1}}}
