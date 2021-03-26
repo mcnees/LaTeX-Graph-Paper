@@ -195,26 +195,33 @@
 %% We have to delay this definition until after \GP@patternsize is
 %% redefined (by the pattern selection and/or user override)
 \newcommand{\GP@declarehexpat}{
-\pgfdeclarepatternformonly
-  {hexagons}%% name
-  {\pgfpointorigin}%% lower left
-  {\pgfpoint{3*\GP@patternsize}{0.866025*2*\GP@patternsize}}
-  {\pgfpoint{3*\GP@patternsize}{0.866025*2*\GP@patternsize}}
-  {
-    \pgfsetlinewidth{0.6pt}
-    \pgftransformshift{\pgfpoint{0mm}{0.866025*\GP@patternsize}}
-    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-    \pgfpathlineto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{\GP@patternsize}{-0.866025*\GP@patternsize}}
-    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{-0.866025*\GP@patternsize}}
-    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{3*\GP@patternsize}{0mm}}
-    \pgfpathmoveto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.866025*\GP@patternsize}}
-    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{0.866025*\GP@patternsize}}
-    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
-    \pgfusepath{stroke}
-  }
+\tikzdeclarepattern{
+  name=hexagons,
+  type=uncolored,
+  bounding box={(0,0) and (3*\GP@patternsize,0.866025*2*\GP@patternsize)},
+  tile size={(3*\GP@patternsize,0.866025*2*\GP@patternsize)},
+  parameters={\tikzhexrotate},
+  tile transformation={rotate=\tikzhexrotate},
+  defaults={
+    rotate/.store in=\tikzhexrotate,rotate=0,
+    % tile size/.store in=\tikztilesize,tile size=10pt,
+	}, 
+  code={
+	 	\pgfsetlinewidth{0.6pt}
+	    \pgftransformshift{\pgfpoint{0mm}{0.866025*\GP@patternsize}}
+	    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+	    \pgfpathlineto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
+	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{-0.866025*\GP@patternsize}}
+	    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{-0.866025*\GP@patternsize}}
+	    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
+	    \pgfpathlineto{\pgfpoint{3*\GP@patternsize}{0mm}}
+	    \pgfpathmoveto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
+	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.866025*\GP@patternsize}}
+	    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{0.866025*\GP@patternsize}}
+	    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
+	    \pgfusepath{stroke}
+	} 
+  } 
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -390,7 +397,7 @@
 
 \define@choicekey*{GP}{pattern}[\val\nr]%
   %% Allowed values for pattern:
-  {std,stdeight,majmin,dot,hex,tri,iso,lightcone,ruled,doubleruled}{%
+  {std,stdeight,majmin,dot,hex,hexup,tri,iso,lightcone,ruled,doubleruled}{%
   \ifcase\nr\relax
     %% std
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -447,6 +454,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \GP@setpattern{true}{}{0.1666in}{%
     \fill [pattern=hexagons,pattern color=minorcolor] (a) rectangle (b);
+    }
+  \or
+    %% hexup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Hex-up grid
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \GP@setpattern{true}{}{0.1666in}{%
+    \fill [pattern={hexagons[rotate=90]},pattern color=minorcolor] (a) rectangle (b);
     }
   \or
     %% tri
