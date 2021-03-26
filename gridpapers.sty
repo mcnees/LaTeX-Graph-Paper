@@ -232,52 +232,45 @@
 %% We have to delay this definition until after \GP@patternsize is
 %% redefined (by the pattern selection and/or user override)
 \newcommand{\GP@declaretripat}{
-\pgfdeclarepatternformonly
-  %% Name of the pattern
-  {triangles}
-  %% Set the lower left corner of the pattern
-  {\pgfpointorigin}
-  %% Set the upper right corner of the pattern
-  {\pgfpoint{\GP@patternsize}{2*0.8660254*\GP@patternsize}}
-  %% Declare the size of the pattern blocks
-  {\pgfpoint{\GP@patternsize}{2*0.8660254*\GP@patternsize}}
-  %% Draw the pattern
-  {
-    \pgfsetlinewidth{0.6pt}
-  \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-  \pgfpathlineto{\pgfpoint{\GP@patternsize}{2*0.8660254*\GP@patternsize}}
-  \pgfpathlineto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
-    \pgfpathmoveto{\pgfpoint{0mm}{0.8660254*\GP@patternsize}}
-  \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.8660254*\GP@patternsize}}
-    \pgfpathmoveto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
-  \pgfpathlineto{\pgfpoint{\GP@patternsize}{0mm}}
-  \pgfpathlineto{\pgfpoint{0mm}{0mm}}
-    \pgfusepath{stroke}
-  }
+\tikzdeclarepattern{
+  name=triangles,
+  type=uncolored,
+  bounding box={(0,0) and (\GP@patternsize,2*0.866025*\GP@patternsize)},
+  tile size={(\GP@patternsize,2*0.866025*\GP@patternsize)},
+  parameters={\tikztrirotate},
+  tile transformation={rotate=\tikztrirotate},
+  defaults={
+    rotate/.store in=\tikztrirotate,rotate=0,
+    % tile size/.store in=\tikztilesize,tile size=10pt,
+	}, 
+  code={
+	 	% \pgfsetlinewidth{0.6pt}
+	 	% 	    \pgftransformshift{\pgfpoint{0mm}{0.866025*\GP@patternsize}}
+	 	% 	    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+	 	% 	    \pgfpathlineto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
+	 	% 	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{-0.866025*\GP@patternsize}}
+	 	% 	    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{-0.866025*\GP@patternsize}}
+	 	% 	    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
+	 	% 	    \pgfpathlineto{\pgfpoint{3*\GP@patternsize}{0mm}}
+	 	% 	    \pgfpathmoveto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
+	 	% 	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.866025*\GP@patternsize}}
+	 	% 	    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{0.866025*\GP@patternsize}}
+	 	% 	    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
+	 	% 	    \pgfusepath{stroke}
+	      \pgfsetlinewidth{0.6pt}
+	    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{2*0.8660254*\GP@patternsize}}
+	    \pgfpathlineto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
+	      \pgfpathmoveto{\pgfpoint{0mm}{0.8660254*\GP@patternsize}}
+	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.8660254*\GP@patternsize}}
+	      \pgfpathmoveto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
+	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{0mm}}
+	    \pgfpathlineto{\pgfpoint{0mm}{0mm}}
+	      \pgfusepath{stroke}
+	} 
+  } 
 }
-\newcommand{\GP@declareisopat}{
-\pgfdeclarepatternformonly
-  %% Name of the pattern
-  {isometric}
-  %% Set the lower left corner of the pattern
-  {\pgfpointorigin}
-  %% Set the upper right corner of the pattern
-  {\pgfpoint{2*0.8660254*\GP@patternsize}{\GP@patternsize}}
-  %% Declare the size of the pattern blocks
-  {\pgfpoint{2*0.8660254*\GP@patternsize}{\GP@patternsize}}
-  %% Draw the pattern
-  {
-    \pgfsetlinewidth{0.6pt}
-  \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-  \pgfpathlineto{\pgfpoint{2*0.8660254*\GP@patternsize}{\GP@patternsize}}
-  \pgfpathlineto{\pgfpoint{2*0.8660254*\GP@patternsize}{0mm}}
-  \pgfpathlineto{\pgfpoint{0mm}{\GP@patternsize}}
-  \pgfpathlineto{\pgfpoint{0mm}{0mm}}
-    \pgfpathmoveto{\pgfpoint{0.8660254*\GP@patternsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{0.8660254*\GP@patternsize}{\GP@patternsize}}
-    \pgfusepath{stroke}
-  }
-}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% This section sets up a routine for filling the squares in a
@@ -477,7 +470,7 @@
 %% Isometric grid
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \GP@setpattern{true}{}{0.25in}{%
-      \fill [pattern=isometric, pattern color=minorcolor] (a) rectangle (b);
+      \fill [pattern={triangles[rotate=90]}, pattern color=minorcolor] (a) rectangle (b);
     }
   \or
     %% lightcone
@@ -561,7 +554,6 @@
 %% patterns with the correct lengths.
 \GP@declarehexpat
 \GP@declaretripat
-\GP@declareisopat
 \GP@declarelightconepat
 \GP@declaredotpat
 
