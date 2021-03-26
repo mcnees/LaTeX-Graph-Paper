@@ -27,7 +27,7 @@
 \RequirePackage{kvoptions}
 \RequirePackage{xcolor}
 \RequirePackage{tikz}
-\usetikzlibrary{patterns.meta,calc}
+\usetikzlibrary{calc}
 \RequirePackage{tikzpagenodes}
 %% everypage has been superseded -- try to use the new builtin
 %% approach, but fall back to everypage-1x if needed
@@ -282,8 +282,7 @@
   /pgf/pattern keys/myshift/.store in=\myshift,
   /pgf/pattern keys/myshift/.initial={(0,0)},
 }
-\tikzdeclarepattern{
-  name=lightcones,
+\tikzdeclarepattern{name=lightcones,
   type=uncolored,
   parameters={\myshift},
   bounding box={(0,0) and (\GP@patternsize,\GP@patternsize)},
@@ -296,7 +295,7 @@
   },
   code={
     %% TODO Make the dashing an option
-    \tikzset{lightlines/.style={line width=0.4pt,dash=on 0.05cm off 0.05cm phase 0.025cm}}
+    \tikzset{lightlines/.style={line width=0.4pt,dash pattern=on 0.05cm off 0.05cm,dash phase=0.025cm}}
     \draw [lightlines] (0,0) -- (\GP@patternsize,\GP@patternsize);
     \draw [lightlines] (0,\GP@patternsize) -- (\GP@patternsize,0);
   },
@@ -547,8 +546,10 @@
 \GP@declarehexpat
 \GP@declaretripat
 \GP@declareisopat
-\GP@declarelightconepat
 \GP@declaredotpat
+
+\usetikzlibrary{patterns.meta}
+\GP@declarelightconepat
 
 %% Set the background color.
 \AtBeginDocument{\pagecolor{bgcolor}}
