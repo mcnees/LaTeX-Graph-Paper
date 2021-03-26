@@ -474,7 +474,10 @@
 \draw[style=minorgrid, shift={(a)}] (0,0) coordinate grid [step=\GP@patternsize] (b);
 %%
 %% Draw a border around the grid.
-\draw[style=majorgrid, pattern={lightcones[myshift={(a)}]}, pattern color=lightlines] (a) rectangle (b);
+\path (a); \pgfgetlastxy{\@x}{\@y}
+\pgfmathsetmacro{\modshiftx}{mod(\@x,\GP@patternsize)}
+\pgfmathsetmacro{\modshifty}{mod(\@y,\GP@patternsize)}
+\draw[style=majorgrid, pattern={lightcones[myshift={(\modshiftx pt,\modshifty pt)}]}, pattern color=lightlines] (a) rectangle (b);
     }
   \or
     %% ruled
