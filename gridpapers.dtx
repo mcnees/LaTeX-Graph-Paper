@@ -250,7 +250,7 @@
 \RequirePackage{kvoptions}
 \RequirePackage{xcolor}
 \RequirePackage{tikz}
-\usetikzlibrary{calc}
+\usetikzlibrary{calc} % we also need patterns.meta, but for old versions of tikz it needs to be imported later or it breaks things
 \RequirePackage{tikzpagenodes}
 %% everypage has been superseded -- try to use the new builtin
 %% approach, but fall back to everypage-1x if needed
@@ -505,7 +505,8 @@
   /pgf/pattern keys/myshift/.store in=\myshift,
   /pgf/pattern keys/myshift/.initial={(0,0)},
 }
-\tikzdeclarepattern{name=lightcones,
+\tikzdeclarepattern{% linebreak here breaks old versions of tikz
+  name=lightcones,
   type=uncolored,
   parameters={\myshift},
   bounding box={(0,0) and (\GP@patternsize,\GP@patternsize)},
@@ -766,13 +767,15 @@
 
 %% Now that everything has been set up, we can finally define the
 %% patterns with the correct lengths.
+
+% these four patterns use old-style pgfdeclarepattern and must be called before importing patterns.meta [on old versions of tikz only]
 \GP@declarehexpat
 \GP@declaretripat
 \GP@declareisopat
 \GP@declaredotpat
 
-\usetikzlibrary{patterns.meta}
-\GP@declarelightconepat
+\usetikzlibrary{patterns.meta} % restore patterns.meta to allow new-style pattern definitions; this must be done (1) before using tikzdeclarepattern or actually drawing anything; (2) after all old-style pgfdeclarepatterns are done [on old versions of tikz only].
+\GP@declarelightconepat % the lightcones pattern uses the new-style definition from patterns.meta
 
 %% Set the background color.
 \AtBeginDocument{\pagecolor{bgcolor}}
