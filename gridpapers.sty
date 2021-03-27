@@ -209,7 +209,7 @@
   tile transformation={rotate=\tikzhexrotate},
   defaults={
     rotate/.store in=\tikzhexrotate,rotate=0,
-  }, 
+  },
   code={
       \pgfsetlinewidth{0.6pt}
       \pgftransformshift{\pgfpoint{0mm}{0.866025*\GP@patternsize}}
@@ -224,8 +224,8 @@
       \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{0.866025*\GP@patternsize}}
       \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
       \pgfusepath{stroke}
-    } 
-  } 
+    }
+  }
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -245,7 +245,7 @@
   tile transformation={rotate=\tikztrirotate},
   defaults={
     rotate/.store in=\tikztrirotate,rotate=0,
-    }, 
+    },
   code={
         \pgfsetlinewidth{0.6pt}
         \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
@@ -257,10 +257,9 @@
         \pgfpathlineto{\pgfpoint{\GP@patternsize}{0mm}}
         \pgfpathlineto{\pgfpoint{0mm}{0mm}}
         \pgfusepath{stroke}
-    } 
-  } 
+    }
+  }
 }
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% This section sets up a routine for filling the squares in a
@@ -292,7 +291,22 @@
   },
 }
 }
-
+%% \pgfdeclarepatternformonly
+%%   {lightcones}% name
+%%   {\pgfpointorigin}% lower left
+%%   {\pgfpoint{\GP@patternsize}{\GP@patternsize}}%  upper right
+%%   {\pgfpoint{\GP@patternsize}{\GP@patternsize}}%  tile size
+%%   {% shape description
+%%     \pgfsetlinewidth{0.4pt}
+%%     %% TODO Make an option
+%%     %Comment out this line for solid lines on light cones, instead of dashes.
+%%     \pgfsetdash{{0.05cm}{0.05cm}}{0.025cm}
+%%     \pgfpathmoveto{\pgfpoint{0in}{0in}}
+%%     \pgfpathlineto{\pgfpoint{\GP@patternsize}{\GP@patternsize}}
+%%     \pgfpathmoveto{\pgfpoint{0in}{\GP@patternsize}}
+%%     \pgfpathlineto{\pgfpoint{\GP@patternsize}{0in}}
+%%     \pgfusepath{stroke}
+%%   }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% This section sets up a routine for filling a region with dots

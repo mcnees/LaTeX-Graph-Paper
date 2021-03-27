@@ -438,7 +438,7 @@
   tile transformation={rotate=\tikzhexrotate},
   defaults={
     rotate/.store in=\tikzhexrotate,rotate=0,
-  }, 
+  },
   code={
       \pgfsetlinewidth{0.6pt}
       \pgftransformshift{\pgfpoint{0mm}{0.866025*\GP@patternsize}}
@@ -453,8 +453,8 @@
       \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{0.866025*\GP@patternsize}}
       \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
       \pgfusepath{stroke}
-    } 
-  } 
+    }
+  }
 }
 
 
@@ -463,6 +463,8 @@
 %% triangles.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% We have to delay this definition until after \GP@patternsize is
+%% redefined (by the pattern selection and/or user override)
 \newcommand{\GP@declaretripat}{
 \tikzdeclarepattern{
   name=triangles,
@@ -473,7 +475,7 @@
   tile transformation={rotate=\tikztrirotate},
   defaults={
     rotate/.store in=\tikztrirotate,rotate=0,
-    }, 
+    },
   code={
         \pgfsetlinewidth{0.6pt}
         \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
@@ -485,8 +487,8 @@
         \pgfpathlineto{\pgfpoint{\GP@patternsize}{0mm}}
         \pgfpathlineto{\pgfpoint{0mm}{0mm}}
         \pgfusepath{stroke}
-    } 
-  } 
+    }
+  }
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -607,7 +609,7 @@
 
 \define@choicekey*{GP}{pattern}[\val\nr]%
   %% Allowed values for pattern:
-  {std,stdeight,majmin,dot,hex,tri,iso,lightcone,ruled,doubleruled}{%
+  {std,stdeight,majmin,dot,hex,hexup,tri,iso,lightcone,ruled,doubleruled}{%
   \ifcase\nr\relax
     %% std
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -771,7 +773,6 @@
 %% patterns with the correct lengths.
 \GP@declarehexpat
 \GP@declaretripat
-\GP@declareisopat
 \GP@declarelightconepat
 \GP@declaredotpat
 
