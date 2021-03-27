@@ -114,14 +114,14 @@
 % \DescribeObject{pattern=\marg{name}}\DescribeDefault{std} Which of
 % the predefined patterns to use for the page or textarea background.
 % The current list of pattern names is: |std|, |stdeight|, |majmin|,
-% |dot|, |hex|, |tri|, |iso|, |lightcone|, |ruled|, |doubleruled|. We
+% |dot|, |hex|, |hexup|, |tri|, |iso|, |lightcone|, |ruled|, |doubleruled|. We
 % describe each of these patterns in Sec.~\ref{sec:patterns}.
 % Patterns come with default page geometry (size and margins; see
 % |geometry|), and default `fullness' (whether they fill the page or
 % not; see options |fullpage| and |textarea|).
 %
 % \DescribeObject{colorset=\marg{name}}\DescribeDefault{std} Color
-% presets.  Valid color preset names are: |std|, |precocious|,
+% presets.  Valid color preset names are: |std|, |precocious|, |ghostly|, 
 % |brickred|, |engineer|, |plumpad|. A preset determines the
 % |majorcolor|, |minorcolor|, and |bgcolor| all at once. But, you can
 % start from a preset and then override some colors.
@@ -181,6 +181,10 @@
 % \DescribeObject{hex} Grid of hexagons.  The |patternsize| option
 % controls the side length of a hexagon.  Default is
 % |patternsize=0.1666in|.
+%
+% \DescribeObject{hexup} Grid of hexagons, rotated 90 degrees from the
+% default orientation.  The |patternsize| option controls the side 
+% length of a hexagon.  Default is |patternsize=0.1666in|.
 %
 % \DescribeObject{tri} Triangle grid.  The |patternsize| option
 % controls the side length of a triangle.  Default is
@@ -353,7 +357,7 @@
 %% the list below.
 \define@choicekey*{GP}{colorset}[\val\nr]%
   %% Allowed values for colorset:
-  {std,precocious,brickred,engineer,plumpad}[std]{%
+  {std,precocious,ghostly,brickred,engineer,plumpad}[std]{%
   \ifcase\nr\relax
     %% std
     \colorlet{minorcolor}{cornflower!30}
@@ -365,6 +369,11 @@
     \colorlet{majorcolor}{rosiegrid}
     \colorlet{bgcolor}{rosiebg}
   \or
+    %% ghostly
+    \colorlet{minorcolor}{gray!15}
+    \colorlet{majorcolor}{gray!20}
+    \colorlet{bgcolor}{white}
+  \or  
     %% brickred
     \colorlet{minorcolor}{brick!35}
     \colorlet{majorcolor}{brick!60}
@@ -418,81 +427,64 @@
 %% We have to delay this definition until after \GP@patternsize is
 %% redefined (by the pattern selection and/or user override)
 \newcommand{\GP@declarehexpat}{
-\pgfdeclarepatternformonly
-  {hexagons}%% name
-  {\pgfpointorigin}%% lower left
-  {\pgfpoint{3*\GP@patternsize}{0.866025*2*\GP@patternsize}}
-  {\pgfpoint{3*\GP@patternsize}{0.866025*2*\GP@patternsize}}
-  {
-    \pgfsetlinewidth{0.6pt}
-    \pgftransformshift{\pgfpoint{0mm}{0.866025*\GP@patternsize}}
-    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-    \pgfpathlineto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{\GP@patternsize}{-0.866025*\GP@patternsize}}
-    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{-0.866025*\GP@patternsize}}
-    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{3*\GP@patternsize}{0mm}}
-    \pgfpathmoveto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.866025*\GP@patternsize}}
-    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{0.866025*\GP@patternsize}}
-    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
-    \pgfusepath{stroke}
-  }
+\tikzdeclarepattern{
+  name=hexagons,
+  type=uncolored,
+  bounding box={(0,0) and (3*\GP@patternsize,0.866025*2*\GP@patternsize)},
+  tile size={(3*\GP@patternsize,0.866025*2*\GP@patternsize)},
+  parameters={\tikzhexrotate},
+  tile transformation={rotate=\tikzhexrotate},
+  defaults={
+    rotate/.store in=\tikzhexrotate,rotate=0,
+  }, 
+  code={
+      \pgfsetlinewidth{0.6pt}
+      \pgftransformshift{\pgfpoint{0mm}{0.866025*\GP@patternsize}}
+      \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+      \pgfpathlineto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
+      \pgfpathlineto{\pgfpoint{\GP@patternsize}{-0.866025*\GP@patternsize}}
+      \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{-0.866025*\GP@patternsize}}
+      \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
+      \pgfpathlineto{\pgfpoint{3*\GP@patternsize}{0mm}}
+      \pgfpathmoveto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
+      \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.866025*\GP@patternsize}}
+      \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{0.866025*\GP@patternsize}}
+      \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
+      \pgfusepath{stroke}
+    } 
+  } 
 }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% This section sets up a routine for filling a shape with
 %% triangles.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% We have to delay this definition until after \GP@patternsize is
-%% redefined (by the pattern selection and/or user override)
 \newcommand{\GP@declaretripat}{
-\pgfdeclarepatternformonly
-  %% Name of the pattern
-  {triangles}
-  %% Set the lower left corner of the pattern
-  {\pgfpointorigin}
-  %% Set the upper right corner of the pattern
-  {\pgfpoint{\GP@patternsize}{2*0.8660254*\GP@patternsize}}
-  %% Declare the size of the pattern blocks
-  {\pgfpoint{\GP@patternsize}{2*0.8660254*\GP@patternsize}}
-  %% Draw the pattern
-  {
-    \pgfsetlinewidth{0.6pt}
-  \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-  \pgfpathlineto{\pgfpoint{\GP@patternsize}{2*0.8660254*\GP@patternsize}}
-  \pgfpathlineto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
-    \pgfpathmoveto{\pgfpoint{0mm}{0.8660254*\GP@patternsize}}
-  \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.8660254*\GP@patternsize}}
-    \pgfpathmoveto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
-  \pgfpathlineto{\pgfpoint{\GP@patternsize}{0mm}}
-  \pgfpathlineto{\pgfpoint{0mm}{0mm}}
-    \pgfusepath{stroke}
-  }
-}
-\newcommand{\GP@declareisopat}{
-\pgfdeclarepatternformonly
-  %% Name of the pattern
-  {isometric}
-  %% Set the lower left corner of the pattern
-  {\pgfpointorigin}
-  %% Set the upper right corner of the pattern
-  {\pgfpoint{2*0.8660254*\GP@patternsize}{\GP@patternsize}}
-  %% Declare the size of the pattern blocks
-  {\pgfpoint{2*0.8660254*\GP@patternsize}{\GP@patternsize}}
-  %% Draw the pattern
-  {
-    \pgfsetlinewidth{0.6pt}
-  \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-  \pgfpathlineto{\pgfpoint{2*0.8660254*\GP@patternsize}{\GP@patternsize}}
-  \pgfpathlineto{\pgfpoint{2*0.8660254*\GP@patternsize}{0mm}}
-  \pgfpathlineto{\pgfpoint{0mm}{\GP@patternsize}}
-  \pgfpathlineto{\pgfpoint{0mm}{0mm}}
-    \pgfpathmoveto{\pgfpoint{0.8660254*\GP@patternsize}{0mm}}
-    \pgfpathlineto{\pgfpoint{0.8660254*\GP@patternsize}{\GP@patternsize}}
-    \pgfusepath{stroke}
-  }
+\tikzdeclarepattern{
+  name=triangles,
+  type=uncolored,
+  bounding box={(0,0) and (\GP@patternsize,2*0.866025*\GP@patternsize)},
+  tile size={(\GP@patternsize,2*0.866025*\GP@patternsize)},
+  parameters={\tikztrirotate},
+  tile transformation={rotate=\tikztrirotate},
+  defaults={
+    rotate/.store in=\tikztrirotate,rotate=0,
+    }, 
+  code={
+        \pgfsetlinewidth{0.6pt}
+        \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+        \pgfpathlineto{\pgfpoint{\GP@patternsize}{2*0.8660254*\GP@patternsize}}
+        \pgfpathlineto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
+        \pgfpathmoveto{\pgfpoint{0mm}{0.8660254*\GP@patternsize}}
+        \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.8660254*\GP@patternsize}}
+        \pgfpathmoveto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
+        \pgfpathlineto{\pgfpoint{\GP@patternsize}{0mm}}
+        \pgfpathlineto{\pgfpoint{0mm}{0mm}}
+        \pgfusepath{stroke}
+    } 
+  } 
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -672,6 +664,14 @@
     \fill [pattern=hexagons,pattern color=minorcolor] (a) rectangle (b);
     }
   \or
+    %% hexup
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Hex-up grid
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \GP@setpattern{true}{}{0.1666in}{%
+    \fill [pattern={hexagons[rotate=90]},pattern color=minorcolor] (a) rectangle (b);
+    }
+  \or  
     %% tri
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Triangle grid, adjust triangle size in the preamble
@@ -685,7 +685,7 @@
 %% Isometric grid
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \GP@setpattern{true}{}{0.25in}{%
-      \fill [pattern=isometric, pattern color=minorcolor] (a) rectangle (b);
+      \fill [pattern={triangles[rotate=90]}, pattern color=minorcolor] (a) rectangle (b);
     }
   \or
     %% lightcone

@@ -130,7 +130,7 @@
 %% the list below.
 \define@choicekey*{GP}{colorset}[\val\nr]%
   %% Allowed values for colorset:
-  {std,precocious,brickred,engineer,plumpad}[std]{%
+  {std,precocious,ghostly,brickred,engineer,plumpad}[std]{%
   \ifcase\nr\relax
     %% std
     \colorlet{minorcolor}{cornflower!30}
@@ -141,6 +141,11 @@
     \colorlet{minorcolor}{rosiegrid!50}
     \colorlet{majorcolor}{rosiegrid}
     \colorlet{bgcolor}{rosiebg}
+  \or
+    %% ghostly
+    \colorlet{minorcolor}{gray!15}
+    \colorlet{majorcolor}{gray!20}
+    \colorlet{bgcolor}{white}
   \or
     %% brickred
     \colorlet{minorcolor}{brick!35}
@@ -204,23 +209,22 @@
   tile transformation={rotate=\tikzhexrotate},
   defaults={
     rotate/.store in=\tikzhexrotate,rotate=0,
-    % tile size/.store in=\tikztilesize,tile size=10pt,
-	}, 
+  }, 
   code={
-	 	\pgfsetlinewidth{0.6pt}
-	    \pgftransformshift{\pgfpoint{0mm}{0.866025*\GP@patternsize}}
-	    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-	    \pgfpathlineto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
-	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{-0.866025*\GP@patternsize}}
-	    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{-0.866025*\GP@patternsize}}
-	    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
-	    \pgfpathlineto{\pgfpoint{3*\GP@patternsize}{0mm}}
-	    \pgfpathmoveto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
-	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.866025*\GP@patternsize}}
-	    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{0.866025*\GP@patternsize}}
-	    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
-	    \pgfusepath{stroke}
-	} 
+      \pgfsetlinewidth{0.6pt}
+      \pgftransformshift{\pgfpoint{0mm}{0.866025*\GP@patternsize}}
+      \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+      \pgfpathlineto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
+      \pgfpathlineto{\pgfpoint{\GP@patternsize}{-0.866025*\GP@patternsize}}
+      \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{-0.866025*\GP@patternsize}}
+      \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
+      \pgfpathlineto{\pgfpoint{3*\GP@patternsize}{0mm}}
+      \pgfpathmoveto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
+      \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.866025*\GP@patternsize}}
+      \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{0.866025*\GP@patternsize}}
+      \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
+      \pgfusepath{stroke}
+    } 
   } 
 }
 
@@ -241,33 +245,19 @@
   tile transformation={rotate=\tikztrirotate},
   defaults={
     rotate/.store in=\tikztrirotate,rotate=0,
-    % tile size/.store in=\tikztilesize,tile size=10pt,
-	}, 
+    }, 
   code={
-	 	% \pgfsetlinewidth{0.6pt}
-	 	% 	    \pgftransformshift{\pgfpoint{0mm}{0.866025*\GP@patternsize}}
-	 	% 	    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-	 	% 	    \pgfpathlineto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
-	 	% 	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{-0.866025*\GP@patternsize}}
-	 	% 	    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{-0.866025*\GP@patternsize}}
-	 	% 	    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
-	 	% 	    \pgfpathlineto{\pgfpoint{3*\GP@patternsize}{0mm}}
-	 	% 	    \pgfpathmoveto{\pgfpoint{0.5*\GP@patternsize}{0mm}}
-	 	% 	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.866025*\GP@patternsize}}
-	 	% 	    \pgfpathlineto{\pgfpoint{2*\GP@patternsize}{0.866025*\GP@patternsize}}
-	 	% 	    \pgfpathlineto{\pgfpoint{2.5*\GP@patternsize}{0mm}}
-	 	% 	    \pgfusepath{stroke}
-	      \pgfsetlinewidth{0.6pt}
-	    \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
-	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{2*0.8660254*\GP@patternsize}}
-	    \pgfpathlineto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
-	      \pgfpathmoveto{\pgfpoint{0mm}{0.8660254*\GP@patternsize}}
-	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.8660254*\GP@patternsize}}
-	      \pgfpathmoveto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
-	    \pgfpathlineto{\pgfpoint{\GP@patternsize}{0mm}}
-	    \pgfpathlineto{\pgfpoint{0mm}{0mm}}
-	      \pgfusepath{stroke}
-	} 
+        \pgfsetlinewidth{0.6pt}
+        \pgfpathmoveto{\pgfpoint{0mm}{0mm}}
+        \pgfpathlineto{\pgfpoint{\GP@patternsize}{2*0.8660254*\GP@patternsize}}
+        \pgfpathlineto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
+        \pgfpathmoveto{\pgfpoint{0mm}{0.8660254*\GP@patternsize}}
+        \pgfpathlineto{\pgfpoint{\GP@patternsize}{0.8660254*\GP@patternsize}}
+        \pgfpathmoveto{\pgfpoint{0mm}{2*0.8660254*\GP@patternsize}}
+        \pgfpathlineto{\pgfpoint{\GP@patternsize}{0mm}}
+        \pgfpathlineto{\pgfpoint{0mm}{0mm}}
+        \pgfusepath{stroke}
+    } 
   } 
 }
 
@@ -302,22 +292,7 @@
   },
 }
 }
-%% \pgfdeclarepatternformonly
-%%   {lightcones}% name
-%%   {\pgfpointorigin}% lower left
-%%   {\pgfpoint{\GP@patternsize}{\GP@patternsize}}%  upper right
-%%   {\pgfpoint{\GP@patternsize}{\GP@patternsize}}%  tile size
-%%   {% shape description
-%%     \pgfsetlinewidth{0.4pt}
-%%     %% TODO Make an option
-%%     %Comment out this line for solid lines on light cones, instead of dashes.
-%%     \pgfsetdash{{0.05cm}{0.05cm}}{0.025cm}
-%%     \pgfpathmoveto{\pgfpoint{0in}{0in}}
-%%     \pgfpathlineto{\pgfpoint{\GP@patternsize}{\GP@patternsize}}
-%%     \pgfpathmoveto{\pgfpoint{0in}{\GP@patternsize}}
-%%     \pgfpathlineto{\pgfpoint{\GP@patternsize}{0in}}
-%%     \pgfusepath{stroke}
-%%   }
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% This section sets up a routine for filling a region with dots
