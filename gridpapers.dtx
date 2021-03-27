@@ -50,7 +50,7 @@
 %</driver>
 % \fi
 %
-% \CheckSum{432}
+% \CheckSum{405}
 %
 % \CharacterTable
 %  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
@@ -73,7 +73,7 @@
 % \changes{v1.0.1}{2021/03/19}{Hotfix: old installs don't have
 % everypage-1x, use everypage}
 % \changes{v1.0.2}{2021/03/26}{Replace triangle and hexagon code
-% to allow rotated grids, add 'ghostly' colorset} 
+% to allow rotated grids, add 'ghostly' colorset}
 %
 % \DoNotIndex{\newcommand,\newenvironment}
 %
@@ -123,7 +123,7 @@
 % not; see options |fullpage| and |textarea|).
 %
 % \DescribeObject{colorset=\marg{name}}\DescribeDefault{std} Color
-% presets.  Valid color preset names are: |std|, |precocious|, |ghostly|, 
+% presets.  Valid color preset names are: |std|, |precocious|, |ghostly|,
 % |brickred|, |engineer|, |plumpad|. A preset determines the
 % |majorcolor|, |minorcolor|, and |bgcolor| all at once. But, you can
 % start from a preset and then override some colors.
@@ -185,7 +185,7 @@
 % |patternsize=0.1666in|.
 %
 % \DescribeObject{hexup} Grid of hexagons, rotated 90 degrees from the
-% default orientation.  The |patternsize| option controls the side 
+% default orientation.  The |patternsize| option controls the side
 % length of a hexagon.  Default is |patternsize=0.1666in|.
 %
 % \DescribeObject{tri} Triangle grid.  The |patternsize| option
@@ -375,7 +375,7 @@
     \colorlet{minorcolor}{gray!15}
     \colorlet{majorcolor}{gray!20}
     \colorlet{bgcolor}{white}
-  \or  
+  \or
     %% brickred
     \colorlet{minorcolor}{brick!35}
     \colorlet{majorcolor}{brick!60}
@@ -675,7 +675,7 @@
     \GP@setpattern{true}{}{0.1666in}{%
     \fill [pattern={hexagons[rotate=90]},pattern color=minorcolor] (a) rectangle (b);
     }
-  \or  
+  \or
     %% tri
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Triangle grid, adjust triangle size in the preamble
