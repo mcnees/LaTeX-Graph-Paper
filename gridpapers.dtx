@@ -500,31 +500,31 @@
 %% grid with null lines.
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TODO Still can't figure out the correct pattern shift!!
-\newcommand{\GP@declarelightconepat}{
-\pgfkeys{
-  /pgf/pattern keys/myshift/.store in=\myshift,
-  /pgf/pattern keys/myshift/.initial={(0,0)},
-}
-\tikzdeclarepattern{
-  name=lightcones,
-  type=uncolored,
-  parameters={\myshift},
-  bounding box={(0,0) and (\GP@patternsize,\GP@patternsize)},
-  tile size={(\GP@patternsize, \GP@patternsize)},
-  tile transformation={
-    shift=\myshift,
-  },
-  defaults={
-    myshift/.store in=\myshift,myshift={(0,0)},
-  },
-  code={
-    %% TODO Make the dashing an option
-    \tikzset{lightlines/.style={line width=0.4pt,dash=on 0.05cm off 0.05cm phase 0.025cm}}
-    \draw [lightlines] (0,0) -- (\GP@patternsize,\GP@patternsize);
-    \draw [lightlines] (0,\GP@patternsize) -- (\GP@patternsize,0);
-  },
-}
-}
+% \newcommand{\GP@declarelightconepat}{
+% \pgfkeys{
+%   /pgf/pattern keys/myshift/.store in=\myshift,
+%   /pgf/pattern keys/myshift/.initial={(0,0)},
+% }
+% \tikzdeclarepattern{% linebreak here breaks old versions of tikz
+%   name=lightcones,
+%   type=uncolored,
+%   parameters={\myshift},
+%   bounding box={(0,0) and (\GP@patternsize,\GP@patternsize)},
+%   tile size={(\GP@patternsize, \GP@patternsize)},
+%   tile transformation={
+%     shift=\myshift,
+%   },
+%   defaults={
+%     myshift/.store in=\myshift,myshift={(0,0)},
+%   },
+%   code={
+%     %% TODO Make the dashing an option
+%     \tikzset{lightlines/.style={line width=0.4pt,dash pattern=on 0.05cm off 0.05cm,dash phase=0.025cm}}
+%     \draw [lightlines] (0,0) -- (\GP@patternsize,\GP@patternsize);
+%     \draw [lightlines] (0,\GP@patternsize) -- (\GP@patternsize,0);
+%   },
+% }
+% }
 %% \pgfdeclarepatternformonly
 %%   {lightcones}% name
 %%   {\pgfpointorigin}% lower left
@@ -693,11 +693,21 @@
 %% A grid with light cones.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     \GP@setpattern{false}{letterpaper, margin=.125in}{0.25in}{%
+%% Do some calculations.
+\path (a |- b) coordinate (c);
+\path (a -| b) coordinate (d);
+\path[rotate around={45:(a)}] (d -| a) coordinate (e) (c -| b) coordinate (f);
+%% Draw the lightlines.
+\begin{scope}
+  \clip (a) rectangle (b);
+  \draw[color=lightlines, dash pattern=on 0.05cm off 0.05cm, dash phase=0.025cm, rotate=45, shift={(a)}] (e) coordinate grid [step=0.7071*\GP@patternsize,rotate=0] (f-| b);
+\end{scope}
+%%
 %% Draw a grid with 4 squares per inch.
 \draw[style=minorgrid, shift={(a)}] (0,0) coordinate grid [step=\GP@patternsize] (b);
 %%
 %% Draw a border around the grid.
-\draw[style=majorgrid, pattern={lightcones[myshift={(a)}]}, pattern color=lightlines] (a) rectangle (b);
+\draw[style=majorgrid] (a) rectangle (b);
     }
   \or
     %% ruled
@@ -770,7 +780,6 @@
 \GP@declarehexpat
 \GP@declaretripat
 \GP@declareisopat
-\GP@declarelightconepat
 \GP@declaredotpat
 
 %% Set the background color.
