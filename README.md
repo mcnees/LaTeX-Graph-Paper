@@ -36,13 +36,13 @@ current valid options are:
 
 * `pattern=<name>`:
 Valid pattern names are:
-`std,stdeight,majmin,dot,hex,tri,iso,lightcone,ruled,doubleruled`. Default
+`std,stdeight,majmin,dot,hex,hexup,tri,iso,lightcone,ruled,doubleruled`. Default
 is `std`.  Patterns come with default page geometry (size and margins;
 see `geometry`), and default 'fullness' (whether they fill the page or
 not; see options `fullpage` and `textarea`).
 * `colorset=<name>`:
 Valid color preset names are:
-`std,precocious,brickred,engineer,plumpad`.  Default is `std`.  A
+`std,precocious,ghostly,brickred,engineer,plumpad`.  Default is `std`.  A
 preset determines the `majorcolor`, `minorcolor`, and `bgcolor` all at
 once.  But, you can start from a preset and then override some colors.
 * `majorcolor=<color>`: Override the preset "major" color.  This can
